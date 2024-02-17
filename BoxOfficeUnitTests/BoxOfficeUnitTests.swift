@@ -10,10 +10,10 @@ import XCTest
 
 final class BoxOfficeUnitTests: XCTestCase {
     
-    private var sut: JsonDecoder<BoxOfficeData>!
+    private var sut: NetworkManager<BoxOfficeData>!
     
     override func setUpWithError() throws {
-        sut = JsonDecoder<BoxOfficeData>()
+        sut = NetworkManager<BoxOfficeData>()
     }
     
     override func tearDownWithError() throws {
@@ -25,7 +25,7 @@ final class BoxOfficeUnitTests: XCTestCase {
         let fileName = "BoxOfficeSample"
         let fileType = "json"
         // when
-        let result = try sut.loadData(from: fileName, of: fileType)
+        let result = try sut.fetchData(from: fileName, of: fileType)
         // then
         XCTAssertNotNil(result)
     }
@@ -34,7 +34,7 @@ final class BoxOfficeUnitTests: XCTestCase {
         // given
         let expectedResult = 10
         // when
-        guard let loadedData = try sut.loadData(from: "BoxOfficeSample", of: "json")
+        guard let loadedData = try sut.fetchData(from: "BoxOfficeSample", of: "json")
         else { return }
         let result = loadedData.boxOfficeResult.dailyBoxOfficeList.count
         // then
@@ -45,7 +45,7 @@ final class BoxOfficeUnitTests: XCTestCase {
         // given
         let expectedResult = 18
         // when
-        guard let loadedData = try sut.loadData(from: "BoxOfficeSample", of: "json")
+        guard let loadedData = try sut.fetchData(from: "BoxOfficeSample", of: "json")
         else { return }
         let result = Mirror(reflecting: loadedData.boxOfficeResult.dailyBoxOfficeList[0]).children.count
         // then
@@ -62,7 +62,7 @@ final class BoxOfficeUnitTests: XCTestCase {
             "screenCount", "showCount"
         ]
         // when
-        guard let loadedData = try sut.loadData(from: "BoxOfficeSample", of: "json")
+        guard let loadedData = try sut.fetchData(from: "BoxOfficeSample", of: "json")
         else { return }
         let item = Mirror(reflecting: loadedData.boxOfficeResult.dailyBoxOfficeList[0]).children
         let result = item.compactMap { $0.label }
