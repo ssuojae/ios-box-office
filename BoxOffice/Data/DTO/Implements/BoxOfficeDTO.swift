@@ -48,11 +48,12 @@ enum RankOldAndNewDTO: String, Decodable {
 
 extension DailyBoxOfficeDTO: Mappable {
     func toEntity() -> BoxOfficeMovie {
-        return BoxOfficeMovie(name: movieName,
-                     releaseDate: openDate,
-                     rank: rank,
-                     salesAmount: salesAmount,
-                     movieCode: movieCode)
+        return BoxOfficeMovie(rank: rank,
+                              rankIntensity: rankIntensity,
+                              rankOldandNew: rankOldAndNew,
+                              movieTitle: movieName,
+                              audienceCount: audienceCount,
+                              audienceAccount: audienceAccount)
     }
 }
 

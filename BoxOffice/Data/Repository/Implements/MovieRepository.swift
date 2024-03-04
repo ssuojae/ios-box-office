@@ -3,43 +3,41 @@ import Foundation
 
 final class MovieRepository: MovieRepositoryProtocol {
     
-    private let requestProvider: RequestProvidable
-    private let sessionProvider: SessionProvidable
-    private let decoder: URLDecodeProtocol
+    private let networkManager: Networkmanagable
     
-    init(request: RequestProvidable, session: SessionProvidable, decoder: URLDecodeProtocol) {
-        self.requestProvider = request
-        self.sessionProvider = session
-        self.decoder = decoder
+    init(networkManager: Networkmanagable) {
+        self.networkManager = networkManager
     }
 
-    func requestBoxofficeData() async -> Result<BoxOfficeDTO, NetworkError> {
-        guard let request = requestProvider.makeURLRequest(for: URLProvider.dailyBoxOffice(date: Date().dayBefore.formattedDate(withFormat: "yyyyMMdd"))) else { return .failure(.urlError) }
-        let result = await sessionProvider.loadAPIRequest(using: request)
-    
+    func requestBoxofficeData() async -> Result<[BoxOfficeMovie], DomainError> {
+        
+        let boxOfficeBuilder = KobisNetworkBuilder(forDate: Date().dayBefore.formattedDate(withFormat: "yyyyMMdd"))
+        let result: Result<BoxOfficeDTO, NetworkError> = await networkManager.bringNetworkResult(from: boxOfficeBuilder)
+
         switch result {
-        case .success(let networkResponse):
-            guard let data = networkResponse.data else { return .failure(.notFound)}
-            let decodeResult: Result<BoxOfficeDTO, NetworkError> = decoder.decode(data)
-            return decodeResult
+        case .success(let boxOfficeDTO):
+            return .success(boxOfficeDTO.boxOfficeResult.dailyBoxOfficeList.map { $0.toEntity() })
         case .failure(let networkError):
-            return .failure(networkError)
+            logNetworkError(networkError)
+            return .failure(networkError.mapToDomainError())
+        }
+        
+    }
+
+    func requestDetailMovieData() async -> Result<MovieDetailInfo, DomainError> {
+        let movieDetailBuilder = KobisNetworkBuilder(forCode: "20247219")
+        let result: Result<DetailMovieInfoDTO, NetworkError> = await networkManager.bringNetworkResult(from: movieDetailBuilder)
+
+        switch result {
+        case .success(let detailMovieInfoDTO):
+            return .success( detailMovieInfoDTO.movieInfoResult.movieInfo.toEntity() )
+        case .failure(let networkError):
+            logNetworkError(networkError)
+            return .failure(networkError.mapToDomainError())
         }
     }
     
-    func requestDetailMovieData() async -> Result<DetailMovieInfoDTO, NetworkError> {
-        guard let request = requestProvider.makeURLRequest(for: URLProvider.detailMovieInformation(code: "20234675")) else { return .failure(.urlError) }
-        let result = await sessionProvider.loadAPIRequest(using: request)
-        
-        switch result {
-        case .success(let networkResponse):
-            guard let data = networkResponse.data else { return .failure(.notFound)}
-            let decodeResult: Result<DetailMovieInfoDTO, NetworkError> = decoder.decode(data)
-            return decodeResult
-        case .failure(let networkError):
-            return .failure(networkError)
-        }
+    private func logNetworkError(_ error: NetworkError) {
+        print("Network Error: \(error.localizedDescription)")
     }
 }
-
-
