@@ -5,31 +5,6 @@ class BoxOfficeCollectionViewController: UIViewController {
     
     var testData: [MovieListItem] = []
     
-    struct MovieListItem: Hashable {
-        let rank: String
-        let rankIntensity: String
-        let rankOldAndNew: RankOldAndNewDTO
-        let movieTitle: String
-        let audienceCount: String
-        let audienceAccount: String
-        let identifier = UUID()
-        
-        // identifier = UUID()
-        // 아이템의 고유성을 보장하기 위해 Hashable 프로토콜을 구현
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(identifier)
-        }
-        
-        init(rank: String, rankIntensity: String, rankOldAndNew: RankOldAndNewDTO, movieTitle: String, audienceCount: String, audienceAccount: String) {
-            self.rank = rank
-            self.rankIntensity = rankIntensity
-            self.rankOldAndNew = rankOldAndNew
-            self.movieTitle = movieTitle
-            self.audienceCount = audienceCount
-            self.audienceAccount = audienceAccount
-        }
-    }
-    
     lazy var items: [MovieListItem] = {
         return itemsInternal()
     }()
@@ -38,7 +13,6 @@ class BoxOfficeCollectionViewController: UIViewController {
     enum Section {
         case main
     }
-
     
     private let usecase: BoxOfficeUseCaseProtocol
     private var boxOfficeTask: Task<Void, Never>?
@@ -63,7 +37,7 @@ class BoxOfficeCollectionViewController: UIViewController {
             await fetchDetailMovieData()
             print("동기동기동기동기동기")
             print(items)
-            applyInitialSnapshot()
+           // applyInitialSnapshot()
         }
         
         // 컬렉션 뷰와 데이터 소스 구성
@@ -95,15 +69,6 @@ extension BoxOfficeCollectionViewController {
         collectionView.register(BoxOfficeMainListCell.self, forCellWithReuseIdentifier: BoxOfficeMainListCell.reuseIdentifier)
     }
     
-//    func createLayout() -> UICollectionViewLayout {
-//        
-//        // 플로우 레이아웃을 통해 셀의 크기와 섹션의 여백을 설정
-//        let layout = UICollectionViewFlowLayout()
-//        layout.itemSize = CGSize(width: 100, height: 100)
-//        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-//        return layout
-//    }
-    
     func createLayout() -> UICollectionViewLayout {
         let estimatedHeight = CGFloat(78)
         let layoutSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
@@ -121,7 +86,7 @@ extension BoxOfficeCollectionViewController {
     
     func configureDataSource() {
         let cellRegistration = UICollectionView.CellRegistration
-        <BoxOfficeMainListCell, BoxOfficeCollectionViewController.MovieListItem> { (cell, indexPath, movieItem) in
+        <BoxOfficeMainListCell, MovieListItem> { (cell, indexPath, movieItem) in
             // Populate the cell with our item description.
             cell.movieNameLabel.text = movieItem.movieTitle
             cell.rankLabel.text = movieItem.rank
