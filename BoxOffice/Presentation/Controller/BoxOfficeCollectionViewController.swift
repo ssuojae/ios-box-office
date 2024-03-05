@@ -3,21 +3,16 @@ import UIKit
 
 class BoxOfficeCollectionViewController: UIViewController {
     
-    var testData: [MovieListItem] = []
+    private var movies: [MovieListItem] = []
+    private let boxOfficeUseCase: BoxOfficeUseCaseProtocol
+    private var fetchTask: Task<Void, Never>?
     
-    lazy var items: [MovieListItem] = {
-        return itemsInternal()
-    }()
-    
-    private let usecase: BoxOfficeUseCaseProtocol
-    private var boxOfficeTask: Task<Void, Never>?
-    
-    var collectionView: UICollectionView! = nil
     var dataSource: UICollectionViewDiffableDataSource<Section, MovieListItem>! = nil
+    var cellRegistration: UICollectionView.CellRegistration<BoxOfficeMainListCell, MovieListItem>! = nil
+    lazy var boxOfficeCollectionView = BoxOfficeCollectionView(frame: view.bounds)
     
-    
-    init(usecase: BoxOfficeUseCaseProtocol) {
-        self.usecase = usecase
+    init(boxOfficeUseCase: BoxOfficeUseCaseProtocol) {
+        self.boxOfficeUseCase = boxOfficeUseCase
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -25,120 +20,117 @@ class BoxOfficeCollectionViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    lazy var items: [MovieListItem] = { 
+        return itemsInternal()
+    }()
+    
+    deinit { fetchTask?.cancel() }
+}
+    
+// MARK: - 생명주기
+extension BoxOfficeCollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        boxOfficeTask = Task {
-            await fetchBoxOfficeData()
-            await fetchDetailMovieData()
-            print("동기동기동기동기동기")
-            print(items)
-           // applyInitialSnapshot()
-        }
+        navigationItem.title = Date().formattedDate(withFormat: "YYYY-MM-dd")
+        fetchBoxOfficeData()
         
         // 컬렉션 뷰와 데이터 소스 구성
         configureCollectionView()
         configureDataSource()
-    }
-    
-    deinit {
-        boxOfficeTask?.cancel()
     }
 }
 
 // MARK: - 컬렉션 뷰
 extension BoxOfficeCollectionViewController {
     func itemsInternal() -> [MovieListItem] {
-        return testData
+        return movies
     }
     
     func configureCollectionView() {
-        
-        // 컬렉션 뷰의 레이아웃을 생성하고, 컬렉션 뷰 초기화
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
-        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        
         // 컬렉션 뷰를 뷰 계층에 추가
-        view.addSubview(collectionView)
-        
+        view.addSubview(boxOfficeCollectionView)
         // 셀을 등록합니다. 셀의 재사용을 위해 필요
-        collectionView.register(BoxOfficeMainListCell.self, forCellWithReuseIdentifier: BoxOfficeMainListCell.reuseIdentifier)
+        boxOfficeCollectionView.register(BoxOfficeMainListCell.self, forCellWithReuseIdentifier: BoxOfficeMainListCell.reuseIdentifier)
     }
     
-    func createLayout() -> UICollectionViewLayout {
-        let estimatedHeight = CGFloat(78)
-        let layoutSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .estimated(estimatedHeight))
-        let item = NSCollectionLayoutItem(layoutSize: layoutSize)
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: layoutSize,
-                                                       subitem: item,
-                                                       count: 1)
-        let section = NSCollectionLayoutSection(group: group)
-        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
-        section.interGroupSpacing = 0
-        let layout = UICollectionViewCompositionalLayout(section: section)
-        return layout
+    func numberFormatter(for data: String) -> String {
+        let numberFormatter: NumberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        guard let result = numberFormatter.string(from: NSNumber(value: Double(data) ?? 0)) else { return "error" }
+        return result
     }
     
     func configureDataSource() {
-        let cellRegistration = UICollectionView.CellRegistration
+        cellRegistration = UICollectionView.CellRegistration
         <BoxOfficeMainListCell, MovieListItem> { (cell, indexPath, movieItem) in
             // Populate the cell with our item description.
-            cell.movieNameLabel.text = movieItem.movieTitle
+            cell.accessories = [.disclosureIndicator()]
             cell.rankLabel.text = movieItem.rank
             cell.rankIntensityLabel.text = movieItem.rankIntensity
-            cell.audienceAccountLabel.text = movieItem.audienceAccount
-            cell.showsSeparator = indexPath.item != self.testData.count
+            cell.movieNameLabel.text = movieItem.movieTitle
+            
+//            numberFormatter(for: movieItem.audienceCount)
+//            numberFormatter(for: movieItem.audienceAccount)
+            
+            
+            let audienceAccountLabel: String = "오늘 \(self.numberFormatter(for: movieItem.audienceCount)) / 총 \(self.numberFormatter(for: movieItem.audienceAccount))"
+            
+            
+            cell.audienceAccountLabel.text = audienceAccountLabel
+            
+            cell.showsSeparator = indexPath.item != self.movies.count
         }
         
         // Diffable Data Source를 구성합니다. 셀을 구성하는 클로저를 정의
-        dataSource = UICollectionViewDiffableDataSource<Section, MovieListItem>(collectionView: collectionView) { (collectionView, indexPath, item) -> UICollectionViewCell? in
+        dataSource = UICollectionViewDiffableDataSource<Section, MovieListItem>(collectionView: boxOfficeCollectionView) { (collectionView, indexPath, item) -> UICollectionViewCell? in
             
             // "cell" 식별자를 사용하여 셀을 가져오기
-            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
+            return collectionView.dequeueConfiguredReusableCell(using: self.cellRegistration, for: indexPath, item: item)
         }
     }
-    
-    func applyInitialSnapshot() {
-        
-        // 초기 스냅샷을 생성하고 적용 이 단계에서는 데이터 모델을 스냅샷에 추가
-        var snapshot = NSDiffableDataSourceSnapshot<Section, MovieListItem>()
-        
-        // 스냅샷에 섹션을 추가
-        snapshot.appendSections([.main])
-        
-        // 스냅샷에 아이템(데이터)을 추가
-        snapshot.appendItems(testData)
-        
-        // 변경된 스냅샷을 데이터 소스에 적용 및 UI업데이트
-        dataSource.apply(snapshot, animatingDifferences: false)
-    }
-    
 }
 
 extension BoxOfficeCollectionViewController {
     
-    func fetchBoxOfficeData() async {
-        let result = await usecase.fetchBoxOfficeData()
+    func fetchBoxOfficeData() {
+        fetchTask = Task {
+            let result = await boxOfficeUseCase.fetchBoxOfficeData()
+            handleFetchResult(result)
+        }
+    }
+    
+    func handleFetchResult(_ result: Result<[BoxOfficeMovie], DomainError>) {
         switch result {
-        case .success(let data):
-            print("일일 박스오피스 조회")
-            print(data)
-            testData = data.map { 
-                MovieListItem( rank: $0.rank,
-                               rankIntensity: $0.rankIntensity,
-                               rankOldAndNew: $0.rankOldandNew,
-                               movieTitle: $0.movieTitle,
-                               audienceCount: $0.audienceCount,
-                               audienceAccount: $0.audienceAccount)
+        case .success(let boxOfficeMovies):
+            let displayMovies = boxOfficeMovies.map {
+                MovieListItem(rank: $0.rank,
+                              rankIntensity: $0.rankIntensity,
+                              rankOldAndNew: $0.rankOldandNew,
+                              movieTitle: $0.movieTitle,
+                              audienceCount: $0.audienceCount,
+                              audienceAccount: $0.audienceAccount)
             }
-            applyInitialSnapshot()
+            updateUI(with: .success(displayMovies))
         case .failure(let error):
-            presentError(error)
+            updateUI(with: .failure(error))
+        }
+    }
+    
+    func updateUI(with result: Result<[MovieListItem], DomainError>) {
+        switch result {
+        case .success(let movies):
+            self.movies = movies // 성공 시, 영화 데이터 업데이트
+            applySnapshot(movies: movies, animatingDifferences: true) // 스냅샷을 이용해 컬렉션 뷰 업데이트
+        case .failure(let error):
+            DispatchQueue.main.async {
+                print(error)
+                // Aler창 나중에 구현하기
+            }
         }
     }
     
     func fetchDetailMovieData() async {
-        let result = await usecase.fetchDetailMovieData()
+        let result = await boxOfficeUseCase.fetchDetailMovieData()
         switch result {
         case .success(let data):
             print("영화 개별 상세 조회")
@@ -146,6 +138,14 @@ extension BoxOfficeCollectionViewController {
         case .failure(let error):
             presentError(error)
         }
+    }
+    
+    // 스냅샷을 이용해 UI 업데이트
+    func applySnapshot(movies: [MovieListItem], animatingDifferences: Bool = true) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, MovieListItem>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(movies, toSection: .main)
+        dataSource.apply(snapshot, animatingDifferences: animatingDifferences) // 스냅샷 적용
     }
     
     func presentError(_ error: DomainError) {

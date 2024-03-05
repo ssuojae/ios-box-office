@@ -1,17 +1,19 @@
 
 import UIKit
 
-class BoxOfficeMainListCell: UICollectionViewCell {
+class BoxOfficeMainListCell: UICollectionViewListCell {
     static let reuseIdentifier = "boxOfficeMainListCell"
     
     let rankLabel = UILabel()
     let rankIntensityLabel = UILabel()
+    
     let movieNameLabel: UILabel = {
         let label = UILabel()
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.5
         return label
     }()
+    
     let audienceAccountLabel = UILabel()
     
     let separatorView = UIView()
@@ -51,13 +53,6 @@ class BoxOfficeMainListCell: UICollectionViewCell {
             return stackView
     }()
     
-    let disclosureIndicatorImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "chevron.right"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.tintColor = .systemGray
-        return imageView
-    }()
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         configure()
@@ -93,7 +88,6 @@ extension BoxOfficeMainListCell {
         
         horizontalStackView.addArrangedSubview(leftStackView)
         horizontalStackView.addArrangedSubview(middleStackView)
-        horizontalStackView.addArrangedSubview(disclosureIndicatorImageView)
         
         addSubview(horizontalStackView)
         
@@ -108,25 +102,11 @@ extension BoxOfficeMainListCell {
         // horizontalStackView의 크기를 자식 뷰에 맞게 조절
         horizontalStackView.widthAnchor.constraint(equalTo: widthAnchor),
         horizontalStackView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.7),
-        disclosureIndicatorImageView.widthAnchor.constraint(equalToConstant: 12),
-        disclosureIndicatorImageView.heightAnchor.constraint(equalToConstant: 20)
         ])
         
         let leftStackWidthConstraint = leftStackView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.2)
         leftStackWidthConstraint.priority = .defaultHigh
         leftStackWidthConstraint.isActive = true
-        
-//        let middleStackWidthConstraint = middleStackView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.5)
-//        middleStackWidthConstraint.priority = .defaultLow
-//        middleStackWidthConstraint.isActive = true
-//        
-//        let rightStackWidthConstraint = disclosureIndicatorImageView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.3)
-//        rightStackWidthConstraint.priority = .defaultHigh
-//        rightStackWidthConstraint.isActive = true
-        
-//        let trailingConstraint = horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30)
-//        trailingConstraint.isActive = true
-//        disclosureIndicatorImageView.trailingAnchor.constraint(equalTo: horizontalStackView.trailingAnchor).isActive = true
         
         addSubview(separatorView)
         separatorView.heightAnchor.constraint(equalToConstant: 0.3).isActive = true

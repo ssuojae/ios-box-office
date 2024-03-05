@@ -23,6 +23,6 @@ final class DependencyEnvironment {
     private(set) lazy var boxOfficeUseCase: BoxOfficeUseCaseProtocol = BoxOfficeUseCase(moviesRepository: movieRepository)
     
     func makeBoxOfficeCollectionViewController() -> BoxOfficeCollectionViewController {
-        BoxOfficeCollectionViewController(usecase: boxOfficeUseCase)
+        BoxOfficeCollectionViewController(boxOfficeUseCase: boxOfficeUseCase)
     }
 }
