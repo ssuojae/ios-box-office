@@ -8,11 +8,6 @@ class BoxOfficeCollectionViewController: UIViewController {
     lazy var items: [MovieListItem] = {
         return itemsInternal()
     }()
-
-    // 섹션 예시
-    enum Section {
-        case main
-    }
     
     private let usecase: BoxOfficeUseCaseProtocol
     private var boxOfficeTask: Task<Void, Never>?
@@ -128,14 +123,13 @@ extension BoxOfficeCollectionViewController {
         case .success(let data):
             print("일일 박스오피스 조회")
             print(data)
-            testData = data.map { movieData in
-                return MovieListItem(
-                rank: movieData.rank,
-                rankIntensity: movieData.rankIntensity,
-                rankOldAndNew: movieData.rankOldandNew,
-                movieTitle: movieData.movieTitle,
-                audienceCount: movieData.audienceCount,
-                audienceAccount: movieData.audienceAccount)
+            testData = data.map { 
+                MovieListItem( rank: $0.rank,
+                               rankIntensity: $0.rankIntensity,
+                               rankOldAndNew: $0.rankOldandNew,
+                               movieTitle: $0.movieTitle,
+                               audienceCount: $0.audienceCount,
+                               audienceAccount: $0.audienceAccount)
             }
             applyInitialSnapshot()
         case .failure(let error):
