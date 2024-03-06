@@ -5,7 +5,6 @@ class BoxOfficeCollectionView: UICollectionView {
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: BoxOfficeCollectionView.createLayout())
         configureCollectionView()
-
     }
     
     required init?(coder: NSCoder) {

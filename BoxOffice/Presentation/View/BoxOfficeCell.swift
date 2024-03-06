@@ -1,13 +1,11 @@
 
 import UIKit
 
-
 class BoxOfficeCell: UICollectionViewListCell {
-    static let reuseIdentifier = "boxOfficeMainListCell"
     
     let rankLabel = UILabel()
     let rankIntensityLabel = UILabel()
-    
+    let audienceAccountLabel = UILabel()
     let movieNameLabel: UILabel = {
         let label = UILabel()
         label.adjustsFontSizeToFitWidth = true
@@ -16,15 +14,6 @@ class BoxOfficeCell: UICollectionViewListCell {
         label.lineBreakMode = .byWordWrapping
         return label
     }()
-    
-    let audienceAccountLabel = UILabel()
-    
-    let separatorView = UIView()
-    var showsSeparator = true {
-        didSet {
-            updateSeparator()
-        }
-    }
     
     let horizontalStackView: UIStackView = {
             let stackView = UIStackView()
@@ -46,7 +35,7 @@ class BoxOfficeCell: UICollectionViewListCell {
             return stackView
     }()
     
-    let middleStackView: UIStackView = {
+    let rightStackView: UIStackView = {
         let stackView = UIStackView()
             stackView.translatesAutoresizingMaskIntoConstraints = false
             stackView.axis = .vertical
@@ -55,6 +44,13 @@ class BoxOfficeCell: UICollectionViewListCell {
             stackView.spacing = 0
             return stackView
     }()
+    
+    let separatorView = UIView()
+    var showsSeparator = true {
+        didSet {
+            updateSeparator()
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -67,58 +63,64 @@ class BoxOfficeCell: UICollectionViewListCell {
 }
 
 extension BoxOfficeCell {
-
+    
     func configureLayout() {
-        rankLabel.translatesAutoresizingMaskIntoConstraints = false
-        rankIntensityLabel.translatesAutoresizingMaskIntoConstraints = false
-        movieNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        audienceAccountLabel.translatesAutoresizingMaskIntoConstraints = false
-        separatorView.translatesAutoresizingMaskIntoConstraints = false
-        
-        rankLabel.adjustsFontForContentSizeCategory = true
-        rankIntensityLabel.adjustsFontForContentSizeCategory = true
-        movieNameLabel.adjustsFontForContentSizeCategory = true
-        audienceAccountLabel.adjustsFontForContentSizeCategory = true
-        
+        configureLabels()
+        configureStackViews()
+        configureHorizontalStackView()
+        configureSeparatorView()
+    }
+
+    private func configureLabels() {
+        for label in [rankLabel, rankIntensityLabel, movieNameLabel, audienceAccountLabel] {
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.adjustsFontForContentSizeCategory = true
+        }
+
         rankLabel.font = UIFont.systemFont(ofSize: 30.0)
-        
-        separatorView.backgroundColor = .opaqueSeparator
-        
+    }
+
+    private func configureStackViews() {
+        for stackView in [leftStackView, rightStackView, horizontalStackView] {
+            stackView.translatesAutoresizingMaskIntoConstraints = false
+            stackView.spacing = 0
+        }
+
         leftStackView.addArrangedSubview(rankLabel)
         leftStackView.addArrangedSubview(rankIntensityLabel)
-        
-        middleStackView.addArrangedSubview(movieNameLabel)
-        middleStackView.addArrangedSubview(audienceAccountLabel)
-        
+        rightStackView.addArrangedSubview(movieNameLabel)
+        rightStackView.addArrangedSubview(audienceAccountLabel)
         horizontalStackView.addArrangedSubview(leftStackView)
-        horizontalStackView.addArrangedSubview(middleStackView)
-        
+        horizontalStackView.addArrangedSubview(rightStackView)
+    }
+
+    private func configureHorizontalStackView() {
         addSubview(horizontalStackView)
-        
-        // horizontalStackView의 제약 조건 설정
+
         NSLayoutConstraint.activate([
-        // horizontalStackView의 수평 중앙 정렬
-        horizontalStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
-                    
-        // horizontalStackView의 수직 중앙 정렬
-        horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-                    
-        // horizontalStackView의 크기를 자식 뷰에 맞게 조절
-        horizontalStackView.widthAnchor.constraint(equalTo: widthAnchor),
-        horizontalStackView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.7),
+            horizontalStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            horizontalStackView.widthAnchor.constraint(equalTo: widthAnchor),
+            horizontalStackView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.7)
         ])
-        
+
         let leftStackWidthConstraint = leftStackView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.2)
         leftStackWidthConstraint.priority = .defaultHigh
         leftStackWidthConstraint.isActive = true
-        
-        addSubview(separatorView)
-        separatorView.heightAnchor.constraint(equalToConstant: 0.3).isActive = true
-        separatorView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+    }
 
-        // Set the separator view just above the bottom of the cell
-        separatorView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+    private func configureSeparatorView() {
+        addSubview(separatorView)
+
+        separatorView.backgroundColor = .opaqueSeparator
+        separatorView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            separatorView.heightAnchor.constraint(equalToConstant: 0.3),
+            separatorView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            separatorView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            separatorView.topAnchor.constraint(equalTo: topAnchor),
+        ])
     }
     
     func updateSeparator() {
