@@ -2,6 +2,7 @@
 import UIKit
 
 
+@available(iOS 14.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
@@ -11,6 +12,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         configureURL()
+        
         
         let mainViewController = UINavigationController(rootViewController: DependencyEnvironment.shared.makeBoxOfficeCollectionViewController())
         

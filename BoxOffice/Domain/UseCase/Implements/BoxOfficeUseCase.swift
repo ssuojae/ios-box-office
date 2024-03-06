@@ -14,8 +14,8 @@ final class BoxOfficeUseCase: BoxOfficeUseCaseProtocol {
         return result
     }
 
-    func fetchDetailMovieData() async -> Result<MovieDetailInfo, DomainError> {
-        let result = await moviesRepository.requestDetailMovieData()
+    func fetchDetailMovieData(movie: String) async -> Result<MovieDetailInfo, DomainError> {
+        let result = await moviesRepository.requestDetailMovieData(movie: movie)
         return result
     }
 }

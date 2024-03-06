@@ -2,6 +2,6 @@
 import Foundation
 
 protocol Networkmanagable {
-    func bringNetworkResult<T: Decodable>(from builder: URLBuilderProtocol) async -> Result<T, NetworkError>
+    func bringNetworkResult<T: Decodable>(from url: URL) async -> Result<T, NetworkError>
 }
 

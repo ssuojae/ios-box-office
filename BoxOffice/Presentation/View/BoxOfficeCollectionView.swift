@@ -1,18 +1,11 @@
-//
-//  BoxOfficeCollectionView.swift
-//  BoxOffice
-//
-//  Created by Harry Ho on 3/5/24.
-//
-
 import UIKit
 
 class BoxOfficeCollectionView: UICollectionView {
 
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: BoxOfficeCollectionView.createLayout())
-        self.frame = frame
         configureCollectionView()
+
     }
     
     required init?(coder: NSCoder) {
@@ -23,7 +16,7 @@ class BoxOfficeCollectionView: UICollectionView {
         self.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.backgroundColor = .systemBackground
     }
-    
+
     private static func createLayout() -> UICollectionViewLayout {
         let estimatedHeight = CGFloat(78)
         let layoutSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
@@ -39,4 +32,3 @@ class BoxOfficeCollectionView: UICollectionView {
         return layout
     }
 }
-

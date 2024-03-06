@@ -4,18 +4,16 @@ import Foundation
 
 class NetworkManager: Networkmanagable {
     
-    private let baseURLProvider: BaseURLProvidable
     private let sessionProvider: SessionProvidable
     private let decoder: URLDecodeProtocol
     
-    init(baseURLProvider: BaseURLProvidable, sessionProvider: SessionProvidable, decoder: URLDecodeProtocol) {
-        self.baseURLProvider = baseURLProvider
+    init(sessionProvider: SessionProvidable, decoder: URLDecodeProtocol) {
         self.sessionProvider = sessionProvider
         self.decoder = decoder
     }
     
-    func bringNetworkResult<T: Decodable>(from builder: URLBuilderProtocol) async -> Result<T, NetworkError> {
-        guard let request = makeURLRequest(with: builder) 
+    func bringNetworkResult<T: Decodable>(from url: URL) async -> Result<T, NetworkError> {
+        guard let request = makeURLRequest(from: url)
         else { return .failure(.urlError) }
         
         let result = await sessionProvider.loadAPIRequest(using: request)
@@ -29,16 +27,7 @@ class NetworkManager: Networkmanagable {
         }
     }
     
-    private func makeURLRequest(with builder: URLBuilderProtocol) -> URLRequest? {
-        guard let baseURL = baseURLProvider.get(for: builder.baseURL),
-              var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: true) 
-        else { return nil }
-        
-        components.path += builder.path
-        components.queryItems = builder.queryItems
-
-        guard let url = components.url else { return nil }
-
+    private func makeURLRequest(from url: URL) -> URLRequest? {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         return request

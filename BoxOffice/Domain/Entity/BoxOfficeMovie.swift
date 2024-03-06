@@ -3,11 +3,14 @@ import Foundation
 
 /// 엔티티 값은 임시로 넣음
 struct BoxOfficeMovie {
+    let name: String
+    let releaseDate: String
     let rank: String
-    let rankIntensity: String
-    let rankOldandNew: RankOldAndNewDTO
-    let movieTitle: String
-    let audienceCount: String
-    let audienceAccount: String
+    let salesAmount: String
+    let movieCode: String
+    let dalilyAudience: String
+    let cumulateAudience: String
+    let rankChange: String
+    let isNew: Bool
 }
 

@@ -1,7 +1,8 @@
 
 import UIKit
 
-class BoxOfficeMainListCell: UICollectionViewListCell {
+
+class BoxOfficeCell: UICollectionViewListCell {
     static let reuseIdentifier = "boxOfficeMainListCell"
     
     let rankLabel = UILabel()
@@ -11,6 +12,8 @@ class BoxOfficeMainListCell: UICollectionViewListCell {
         let label = UILabel()
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.5
+        label.numberOfLines = 2
+        label.lineBreakMode = .byWordWrapping
         return label
     }()
     
@@ -55,7 +58,7 @@ class BoxOfficeMainListCell: UICollectionViewListCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configure()
+        configureLayout()
     }
     
     required init?(coder: NSCoder) {
@@ -63,8 +66,9 @@ class BoxOfficeMainListCell: UICollectionViewListCell {
     }
 }
 
-extension BoxOfficeMainListCell {
-    func configure() {
+extension BoxOfficeCell {
+
+    func configureLayout() {
         rankLabel.translatesAutoresizingMaskIntoConstraints = false
         rankIntensityLabel.translatesAutoresizingMaskIntoConstraints = false
         movieNameLabel.translatesAutoresizingMaskIntoConstraints = false
