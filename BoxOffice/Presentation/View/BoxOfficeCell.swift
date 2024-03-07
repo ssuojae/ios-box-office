@@ -21,7 +21,7 @@ class BoxOfficeCell: UICollectionViewListCell {
             stackView.axis = .horizontal
             stackView.alignment = .center
             stackView.distribution = .fill
-            stackView.spacing = 8
+            stackView.spacing = 0
             return stackView
     }()
     
@@ -40,7 +40,7 @@ class BoxOfficeCell: UICollectionViewListCell {
             stackView.translatesAutoresizingMaskIntoConstraints = false
             stackView.axis = .vertical
             stackView.alignment = .leading
-            stackView.distribution = .fillEqually
+            stackView.distribution = .fillProportionally
             stackView.spacing = 0
             return stackView
     }()
@@ -119,7 +119,7 @@ extension BoxOfficeCell {
             separatorView.heightAnchor.constraint(equalToConstant: 0.3),
             separatorView.leadingAnchor.constraint(equalTo: leadingAnchor),
             separatorView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            separatorView.topAnchor.constraint(equalTo: topAnchor),
+            separatorView.topAnchor.constraint(equalTo: topAnchor)
         ])
     }
     

@@ -35,6 +35,10 @@
 		63DF20F32970E1A0005DF7D1 /* BoxOfficeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF20F22970E1A0005DF7D1 /* BoxOfficeViewController.swift */; };
 		63DF20F82970E1A1005DF7D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63DF20F72970E1A1005DF7D1 /* Assets.xcassets */; };
 		63DF20FB2970E1A1005DF7D1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63DF20F92970E1A1005DF7D1 /* LaunchScreen.storyboard */; };
+		C70B00422B99BCEB00820277 /* releaseState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70B00412B99BCEB00820277 /* releaseState.swift */; };
+		C70B00442B99BDA300820277 /* NewMovieState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70B00432B99BDA300820277 /* NewMovieState.swift */; };
+		C70B00462B99D8BC00820277 /* MovieRankChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70B00452B99D8BC00820277 /* MovieRankChecker.swift */; };
+		C70B00482B99DA7900820277 /* OldMovieState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70B00472B99DA7900820277 /* OldMovieState.swift */; };
 		C76965E62B86E83100EF8F87 /* NetworkResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76965E52B86E83100EF8F87 /* NetworkResponse.swift */; };
 		C76965EA2B86E83D00EF8F87 /* SessionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76965E92B86E83D00EF8F87 /* SessionProvider.swift */; };
 		C76965EF2B86E89B00EF8F87 /* MovieRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76965EE2B86E89B00EF8F87 /* MovieRepository.swift */; };
@@ -93,6 +97,10 @@
 		63DF20F72970E1A1005DF7D1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		63DF20FA2970E1A1005DF7D1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		63DF20FC2970E1A1005DF7D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C70B00412B99BCEB00820277 /* releaseState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = releaseState.swift; sourceTree = "<group>"; };
+		C70B00432B99BDA300820277 /* NewMovieState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMovieState.swift; sourceTree = "<group>"; };
+		C70B00452B99D8BC00820277 /* MovieRankChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieRankChecker.swift; sourceTree = "<group>"; };
+		C70B00472B99DA7900820277 /* OldMovieState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldMovieState.swift; sourceTree = "<group>"; };
 		C76965E52B86E83100EF8F87 /* NetworkResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkResponse.swift; sourceTree = "<group>"; };
 		C76965E92B86E83D00EF8F87 /* SessionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionProvider.swift; sourceTree = "<group>"; };
 		C76965EE2B86E89B00EF8F87 /* MovieRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieRepository.swift; sourceTree = "<group>"; };
@@ -348,9 +356,37 @@
 			path = BoxOffice;
 			sourceTree = "<group>";
 		};
+		C70B003E2B99BC5800820277 /* State */ = {
+			isa = PBXGroup;
+			children = (
+				C70B003F2B99BC6B00820277 /* Interfaces */,
+				C70B00402B99BC7500820277 /* Implements */,
+			);
+			path = State;
+			sourceTree = "<group>";
+		};
+		C70B003F2B99BC6B00820277 /* Interfaces */ = {
+			isa = PBXGroup;
+			children = (
+				C70B00412B99BCEB00820277 /* releaseState.swift */,
+			);
+			path = Interfaces;
+			sourceTree = "<group>";
+		};
+		C70B00402B99BC7500820277 /* Implements */ = {
+			isa = PBXGroup;
+			children = (
+				C70B00432B99BDA300820277 /* NewMovieState.swift */,
+				C70B00472B99DA7900820277 /* OldMovieState.swift */,
+				C70B00452B99D8BC00820277 /* MovieRankChecker.swift */,
+			);
+			path = Implements;
+			sourceTree = "<group>";
+		};
 		C76965DC2B86E66500EF8F87 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				C70B003E2B99BC5800820277 /* State */,
 				084E378C2B95FE1C007C51FE /* DisplayModel */,
 				084E37882B95F6FC007C51FE /* View */,
 				08AB8E7B2B7F24BE00564AC5 /* Controller */,
@@ -617,10 +653,12 @@
 				0827984A2B884F9500ACC723 /* DateExtension.swift in Sources */,
 				084E37772B95E79D007C51FE /* URLBuilder.swift in Sources */,
 				084E37902B95FED2007C51FE /* BoxOfficeCollectionView.swift in Sources */,
+				C70B00442B99BDA300820277 /* NewMovieState.swift in Sources */,
 				08933A632B946D5300D2831E /* Networkmanagable.swift in Sources */,
 				C7A1E76A2B8831AA00F9AB6B /* DomainError.swift in Sources */,
 				084E37782B95E79D007C51FE /* BaseURLConfigurable.swift in Sources */,
 				C76965F12B86ECB800EF8F87 /* BoxOfficeMovie.swift in Sources */,
+				C70B00482B99DA7900820277 /* OldMovieState.swift in Sources */,
 				082798172B87747300ACC723 /* BaseURLType.swift in Sources */,
 				C77ADAB82B7C766A0069AE0F /* NetworkError.swift in Sources */,
 				63DF20F32970E1A0005DF7D1 /* BoxOfficeViewController.swift in Sources */,
@@ -638,6 +676,7 @@
 				C7A1E7682B882C3A00F9AB6B /* MovieRepositoryProtocol.swift in Sources */,
 				084E37762B95E79D007C51FE /* BaseURLManager.swift in Sources */,
 				082798362B882B8400ACC723 /* Decodable.swift in Sources */,
+				C70B00462B99D8BC00820277 /* MovieRankChecker.swift in Sources */,
 				084E378E2B95FE27007C51FE /* BoxOfficeDisplayModel.swift in Sources */,
 				084E377A2B95E79D007C51FE /* URLBuilderProtocol.swift in Sources */,
 				C76965F32B86ECBD00EF8F87 /* BoxOfficeUseCase.swift in Sources */,
@@ -645,6 +684,7 @@
 				0827983C2B88328B00ACC723 /* BoxOfficeUseCaseProtocol.swift in Sources */,
 				63DF20F12970E1A0005DF7D1 /* SceneDelegate.swift in Sources */,
 				082798402B8833F000ACC723 /* HTTPMethodType.swift in Sources */,
+				C70B00422B99BCEB00820277 /* releaseState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

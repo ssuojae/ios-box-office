@@ -4,6 +4,7 @@ import UIKit
 final class BoxOfficeViewController: UIViewController {
     
     private let boxOfficeUseCase: BoxOfficeUseCaseProtocol
+    private let movieRankChecker = MovieRankChecker(movieReleaseState: NewMovieState())
     
     @SynchronizedLock private var movies: [BoxOfficeDisplayModel] = [] // 영화 데이터를 저장할 배열
     private var fetchTask: Task<Void, Never>?
@@ -37,8 +38,6 @@ extension BoxOfficeViewController {
         fetchBoxOfficeData() // 데이터 가져오기
         setupRefreshControl()
     }
-    
-    
 }
 
 // MARK: - Refresh
@@ -75,7 +74,6 @@ private extension BoxOfficeViewController {
         guard let result = numberFormatter.string(from: NSNumber(value: Double(data) ?? 0)) else { return "error" }
         return result
     }
-
     
     // 커스텀 뷰 설정
     private func setupBoxOfficeView() {
@@ -99,32 +97,40 @@ private extension BoxOfficeViewController {
         cellRegistration = UICollectionView.CellRegistration<BoxOfficeCell, BoxOfficeDisplayModel> { (cell, indexPath, movie) in
             cell.accessories = [.disclosureIndicator()]
             cell.rankLabel.text = movie.rank
-            
-            if movie.isNew == true {
-                cell.rankIntensityLabel.textColor = .red
-                cell.rankIntensityLabel.text = "신작"
+        
+            if movie.isNew {
+                self.movieRankChecker.makeNewMovieRankLabel()
+                self.movieRankChecker.showMovieRank(with: cell)
             } else {
-                switch movie.rankIntensity {
-                case "0":
-                    cell.rankIntensityLabel.text = "-"
-                case let x where x.contains("-"):
-                    let attributedString = NSMutableAttributedString(string: "")
-                    let imageAttachement = NSTextAttachment()
-                    imageAttachement.image = UIImage(systemName: "arrowtriangle.down.fill")?.withTintColor(.blue, renderingMode: .alwaysTemplate)
-                    attributedString.append(NSAttributedString(attachment: imageAttachement))
-                    attributedString.append(NSAttributedString(string: movie.rankIntensity.replacingOccurrences(of: "-", with: "")))
-                    
-                    cell.rankIntensityLabel.attributedText = attributedString
-                default:
-                    let attributedString = NSMutableAttributedString(string: "")
-                    let imageAttachement = NSTextAttachment()
-                    imageAttachement.image = UIImage(systemName: "arrowtriangle.up.fill")?.withTintColor(.red, renderingMode: .alwaysTemplate)
-                    attributedString.append(NSAttributedString(attachment: imageAttachement))
-                    attributedString.append(NSAttributedString(string: movie.rankIntensity))
-                    
-                    cell.rankIntensityLabel.attributedText = attributedString
-                }
+                self.movieRankChecker.makeOldMovieRankLabel()
+                self.movieRankChecker.showMovieRank(with: cell)
             }
+//            
+//            if movie.isNew {
+//                cell.rankIntensityLabel.textColor = .red
+//                cell.rankIntensityLabel.text = "신작"
+//            } else {
+//                switch movie.rankIntensity {
+//                case "0":
+//                    cell.rankIntensityLabel.text = "-"
+//                case let x where x.contains("-"):
+//                    let attributedString = NSMutableAttributedString(string: "")
+//                    let imageAttachement = NSTextAttachment()
+//                    imageAttachement.image = UIImage(systemName: "arrowtriangle.down.fill")?.withTintColor(.blue, renderingMode: .alwaysTemplate)
+//                    attributedString.append(NSAttributedString(attachment: imageAttachement))
+//                    attributedString.append(NSAttributedString(string: movie.rankIntensity.replacingOccurrences(of: "-", with: "")))
+//                    
+//                    cell.rankIntensityLabel.attributedText = attributedString
+//                default:
+//                    let attributedString = NSMutableAttributedString(string: "")
+//                    let imageAttachement = NSTextAttachment()
+//                    imageAttachement.image = UIImage(systemName: "arrowtriangle.up.fill")?.withTintColor(.red, renderingMode: .alwaysTemplate)
+//                    attributedString.append(NSAttributedString(attachment: imageAttachement))
+//                    attributedString.append(NSAttributedString(string: movie.rankIntensity))
+//                    
+//                    cell.rankIntensityLabel.attributedText = attributedString
+//                }
+//            }
             
             cell.movieNameLabel.text = movie.movieName
             
