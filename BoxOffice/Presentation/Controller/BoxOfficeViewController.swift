@@ -4,7 +4,6 @@ import UIKit
 final class BoxOfficeViewController: UIViewController {
     
     private let boxOfficeUseCase: BoxOfficeUseCaseProtocol
-    private let movieRankChecker = MovieRankChecker(movieReleaseState: NewMovieState())
     
     @SynchronizedLock private var movies: [BoxOfficeDisplayModel] = [] // 영화 데이터를 저장할 배열
     private var fetchTask: Task<Void, Never>?
@@ -17,7 +16,7 @@ final class BoxOfficeViewController: UIViewController {
         self.boxOfficeUseCase = boxOfficeUseCase
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) { fatalError() }
     
     deinit {
@@ -38,6 +37,8 @@ extension BoxOfficeViewController {
         fetchBoxOfficeData() // 데이터 가져오기
         setupRefreshControl()
     }
+    
+    
 }
 
 // MARK: - Refresh
@@ -68,13 +69,6 @@ private extension BoxOfficeViewController {
         navigationItem.title = Date().formattedDate(withFormat: "YYYY-MM-dd")
     }
     
-    private func numberFormatter(for data: String) -> String {
-        let numberFormatter: NumberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .decimal
-        guard let result = numberFormatter.string(from: NSNumber(value: Double(data) ?? 0)) else { return "error" }
-        return result
-    }
-    
     // 커스텀 뷰 설정
     private func setupBoxOfficeView() {
         boxOfficeCollectionView = BoxOfficeCollectionView(frame: .zero)
@@ -97,44 +91,40 @@ private extension BoxOfficeViewController {
         cellRegistration = UICollectionView.CellRegistration<BoxOfficeCell, BoxOfficeDisplayModel> { (cell, indexPath, movie) in
             cell.accessories = [.disclosureIndicator()]
             cell.rankLabel.text = movie.rank
-        
-            if movie.isNew {
-                self.movieRankChecker.makeNewMovieRankLabel()
-                self.movieRankChecker.showMovieRank(with: cell)
+            
+            
+            
+            if movie.isNew == true {
+                cell.rankIntensityLabel.textColor = .red
+                cell.rankIntensityLabel.text = "신작"
             } else {
-                self.movieRankChecker.makeOldMovieRankLabel()
-                self.movieRankChecker.showMovieRank(with: cell)
+                switch movie.rankIntensity {
+                case "0":
+                    cell.rankIntensityLabel.text = "-"
+                case let x where x.contains("-"):
+                    
+                    let imageAttachement = NSTextAttachment()
+                    imageAttachement.image = UIImage(systemName: "arrowtriangle.down.fill")?.withTintColor(.blue, renderingMode: .alwaysTemplate)
+                    
+                    let attributedString = NSMutableAttributedString(attachment: imageAttachement)
+                    
+                    attributedString.append(NSAttributedString(string: movie.rankIntensity.replacingOccurrences(of: "-", with: "")))
+                    
+                    cell.rankIntensityLabel.attributedText = attributedString
+                default:
+                    let attributedString = NSMutableAttributedString(string: "")
+                    let imageAttachement = NSTextAttachment()
+                    imageAttachement.image = UIImage(systemName: "arrowtriangle.up.fill")?.withTintColor(.red, renderingMode: .alwaysTemplate)
+                    attributedString.append(NSAttributedString(attachment: imageAttachement))
+                    attributedString.append(NSAttributedString(string: movie.rankIntensity))
+                    
+                    cell.rankIntensityLabel.attributedText = attributedString
+                }
             }
-//            
-//            if movie.isNew {
-//                cell.rankIntensityLabel.textColor = .red
-//                cell.rankIntensityLabel.text = "신작"
-//            } else {
-//                switch movie.rankIntensity {
-//                case "0":
-//                    cell.rankIntensityLabel.text = "-"
-//                case let x where x.contains("-"):
-//                    let attributedString = NSMutableAttributedString(string: "")
-//                    let imageAttachement = NSTextAttachment()
-//                    imageAttachement.image = UIImage(systemName: "arrowtriangle.down.fill")?.withTintColor(.blue, renderingMode: .alwaysTemplate)
-//                    attributedString.append(NSAttributedString(attachment: imageAttachement))
-//                    attributedString.append(NSAttributedString(string: movie.rankIntensity.replacingOccurrences(of: "-", with: "")))
-//                    
-//                    cell.rankIntensityLabel.attributedText = attributedString
-//                default:
-//                    let attributedString = NSMutableAttributedString(string: "")
-//                    let imageAttachement = NSTextAttachment()
-//                    imageAttachement.image = UIImage(systemName: "arrowtriangle.up.fill")?.withTintColor(.red, renderingMode: .alwaysTemplate)
-//                    attributedString.append(NSAttributedString(attachment: imageAttachement))
-//                    attributedString.append(NSAttributedString(string: movie.rankIntensity))
-//                    
-//                    cell.rankIntensityLabel.attributedText = attributedString
-//                }
-//            }
             
             cell.movieNameLabel.text = movie.movieName
             
-            let audienceAccountLabel: String = 
+            let audienceAccountLabel: String =
             "오늘 \(self.numberFormatter(for: movie.audienceCount)) / 총 \(self.numberFormatter(for: movie.audienceAccount))"
             
             cell.audienceAccountLabel.text = audienceAccountLabel
@@ -145,8 +135,14 @@ private extension BoxOfficeViewController {
 
 // MARK: - Fetch Data
 private extension BoxOfficeViewController {
+
     func fetchBoxOfficeData() {
+    
+        let loadingPlaceholder = (1...10).map { _ in BoxOfficeDisplayModel.placeholder }
+        updateUI(with: .success(loadingPlaceholder), isLoading: true)
+
         fetchTask = Task {
+            try? await Task.sleep(nanoseconds: 2_000_000_000)
             let result = await boxOfficeUseCase.fetchBoxOfficeData()
             handleFetchResult(result)
         }
@@ -154,16 +150,17 @@ private extension BoxOfficeViewController {
     
     @MainActor
     func handleFetchResult(_ result: Result<[BoxOfficeMovie], DomainError>) {
-        boxOfficeCollectionView.refreshControl?.endRefreshing() // 데이터 가져오면 리프레시 종료
+        boxOfficeCollectionView.refreshControl?.endRefreshing()
         switch result {
         case .success(let boxOfficeMovies):
             let displayMovies = mapEntityToDisplayModel(boxOfficeMovies)
-            updateUI(with: .success(displayMovies))
+            self.movies = displayMovies
+            applySnapshot(movies: displayMovies, animatingDifferences: true)
         case .failure(let error):
-            updateUI(with: .failure(error))
+            print("Failed to load data: \(error)")
         }
     }
-    
+
     func mapEntityToDisplayModel(_ boxOfficeMovies: [BoxOfficeMovie]) -> [BoxOfficeDisplayModel] {
         return boxOfficeMovies.map {
             BoxOfficeDisplayModel(
@@ -180,14 +177,17 @@ private extension BoxOfficeViewController {
 private extension BoxOfficeViewController {
     // 결과에 따라 UI 업데이트
     @MainActor
-    func updateUI(with result: Result<[BoxOfficeDisplayModel], DomainError>) {
+    private func updateUI(with result: Result<[BoxOfficeDisplayModel], DomainError>, isLoading: Bool = false) {
         switch result {
         case .success(let movies):
-            self.movies = movies // 성공 시, 영화 데이터 업데이트
-            applySnapshot(movies: movies, animatingDifferences: true) // 스냅샷을 이용해 컬렉션 뷰 업데이트
+            self.movies = movies
+            if isLoading {
+                applySnapshot(movies: movies, animatingDifferences: false)
+            } else {
+                applySnapshot(movies: movies, animatingDifferences: true)
+            }
         case .failure(let error):
-            print(error)
-            // Aler창 나중에 구현하기
+            print("Failed to load data: \(error)")
         }
     }
 }
@@ -209,13 +209,12 @@ private extension BoxOfficeViewController {
     }
     
     // 스냅샷을 이용해 UI 업데이트
-    func applySnapshot(movies: [BoxOfficeDisplayModel], animatingDifferences: Bool = true) {
+    private func applySnapshot(movies: [BoxOfficeDisplayModel], animatingDifferences: Bool) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, BoxOfficeDisplayModel>()
         snapshot.appendSections([.main])
         snapshot.appendItems(movies, toSection: .main)
-        dataSource.apply(snapshot, animatingDifferences: animatingDifferences) // 스냅샷 적용
+        dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
     }
 
 
 }
-

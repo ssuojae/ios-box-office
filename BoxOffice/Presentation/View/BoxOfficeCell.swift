@@ -1,11 +1,17 @@
 
 import UIKit
 
-class BoxOfficeCell: UICollectionViewListCell {
-    
-    let rankLabel = UILabel()
+final class BoxOfficeCell: UICollectionViewListCell {
+
     let rankIntensityLabel = UILabel()
     let audienceAccountLabel = UILabel()
+    
+    let rankLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 30.0)
+        return label
+    }()
+
     let movieNameLabel: UILabel = {
         let label = UILabel()
         label.adjustsFontSizeToFitWidth = true
@@ -17,17 +23,15 @@ class BoxOfficeCell: UICollectionViewListCell {
     
     let horizontalStackView: UIStackView = {
             let stackView = UIStackView()
-            stackView.translatesAutoresizingMaskIntoConstraints = false
             stackView.axis = .horizontal
             stackView.alignment = .center
             stackView.distribution = .fill
-            stackView.spacing = 0
+            stackView.spacing = 8
             return stackView
     }()
     
     let leftStackView: UIStackView = {
         let stackView = UIStackView()
-            stackView.translatesAutoresizingMaskIntoConstraints = false
             stackView.axis = .vertical
             stackView.alignment = .center
             stackView.distribution = .fill
@@ -35,17 +39,16 @@ class BoxOfficeCell: UICollectionViewListCell {
             return stackView
     }()
     
-    let rightStackView: UIStackView = {
+    private let rightStackView: UIStackView = {
         let stackView = UIStackView()
-            stackView.translatesAutoresizingMaskIntoConstraints = false
             stackView.axis = .vertical
             stackView.alignment = .leading
-            stackView.distribution = .fillProportionally
+            stackView.distribution = .fillEqually
             stackView.spacing = 0
             return stackView
     }()
     
-    let separatorView = UIView()
+    private let separatorView = UIView()
     var showsSeparator = true {
         didSet {
             updateSeparator()
@@ -60,6 +63,8 @@ class BoxOfficeCell: UICollectionViewListCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    
 }
 
 extension BoxOfficeCell {
@@ -70,32 +75,31 @@ extension BoxOfficeCell {
         configureHorizontalStackView()
         configureSeparatorView()
     }
+    
 
     private func configureLabels() {
-        for label in [rankLabel, rankIntensityLabel, movieNameLabel, audienceAccountLabel] {
-            label.translatesAutoresizingMaskIntoConstraints = false
-            label.adjustsFontForContentSizeCategory = true
+        [rankLabel, rankIntensityLabel, movieNameLabel, audienceAccountLabel].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.adjustsFontForContentSizeCategory = true
         }
-
-        rankLabel.font = UIFont.systemFont(ofSize: 30.0)
     }
 
     private func configureStackViews() {
-        for stackView in [leftStackView, rightStackView, horizontalStackView] {
-            stackView.translatesAutoresizingMaskIntoConstraints = false
-            stackView.spacing = 0
+        [leftStackView, rightStackView, horizontalStackView].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.spacing = 0
         }
-
+        
         leftStackView.addArrangedSubview(rankLabel)
         leftStackView.addArrangedSubview(rankIntensityLabel)
         rightStackView.addArrangedSubview(movieNameLabel)
         rightStackView.addArrangedSubview(audienceAccountLabel)
         horizontalStackView.addArrangedSubview(leftStackView)
         horizontalStackView.addArrangedSubview(rightStackView)
+        addSubview(horizontalStackView)
     }
 
     private func configureHorizontalStackView() {
-        addSubview(horizontalStackView)
 
         NSLayoutConstraint.activate([
             horizontalStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -119,11 +123,30 @@ extension BoxOfficeCell {
             separatorView.heightAnchor.constraint(equalToConstant: 0.3),
             separatorView.leadingAnchor.constraint(equalTo: leadingAnchor),
             separatorView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            separatorView.topAnchor.constraint(equalTo: topAnchor)
+            separatorView.topAnchor.constraint(equalTo: topAnchor),
         ])
     }
+    
+//    private func test(new: Bool, num: Int) {
+//        if new == true {
+//            rankIntensityLabel.textColor = .red
+//            rankIntensityLabel.text = "신작"
+//        }
+//        switch num {
+//        case 0:
+//            rankIntensityLabel.text = "-"
+//        case x where x < 0:
+//            
+//            
+//        case x where x > 0:
+//            
+//            
+//        }
+//        
+//    }
     
     func updateSeparator() {
         separatorView.isHidden = !showsSeparator
     }
+    
 }
