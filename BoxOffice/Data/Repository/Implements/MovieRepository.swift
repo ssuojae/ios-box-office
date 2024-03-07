@@ -39,24 +39,24 @@ final class MovieRepository: MovieRepositoryProtocol {
     }
     
     private func makeBoxOfficeURL() -> URL? {
-        guard let url = urlBuilder
+        let url = urlBuilder
             .setBaseURL(type: .kobis)
             .setPath("/boxoffice/searchDailyBoxOfficeList.json")
             .addQueryItem(name: "targetDt", value: Date().dayBefore.formattedDate(withFormat: "yyyyMMdd"))
-            .withApiKey(apiKey: ENV.API_KEY)
+            .setApiKey(apiKey: ENV.API_KEY)
             .build()
-        else { logNetworkError(NetworkError.urlError); return nil }
+        
         return url
     }
 
     private func makeMovieDetailURL(movieCode: String) -> URL? {
-        guard let url = urlBuilder
+        let url = urlBuilder
             .setBaseURL(type: .kobis)
             .setPath("/movie/searchMovieInfo.json")
             .addQueryItem(name: "movieCd", value: movieCode)
-            .withApiKey(apiKey: ENV.API_KEY)
+            .setApiKey(apiKey: ENV.API_KEY)
             .build()
-        else { logNetworkError(NetworkError.urlError); return nil }
+        
         return url
     }
 
