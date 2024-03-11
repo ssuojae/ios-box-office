@@ -2,19 +2,8 @@
 import UIKit
 
 extension UIViewController {
-        
-    
-    // MARK: - Handle Number
-    func numberFormatter(for data: String) -> String {
-        let numberFormatter: NumberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .decimal
-        guard let result = numberFormatter.string(from: NSNumber(value: Double(data) ?? 0)) else { return "error" }
-        return result
-    }
 
-    
     // MARK: - Alert Controller
-    
     func presentAlert(title: String,
                       message: String,
                       confirmTitle: String,
@@ -27,7 +16,6 @@ extension UIViewController {
         
         self.present(alertViewController, animated: true, completion: completion)
     }
-
 }
 
 

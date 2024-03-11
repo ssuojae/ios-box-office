@@ -23,7 +23,6 @@ final class DependencyEnvironment {
     
     private(set) lazy var boxOfficeUseCase: BoxOfficeUseCaseProtocol = BoxOfficeUseCase(moviesRepository: movieRepository)
     
-    @available(iOS 14.0, *)
     func makeBoxOfficeCollectionViewController() -> BoxOfficeViewController {
         BoxOfficeViewController(boxOfficeUseCase: boxOfficeUseCase)
     }

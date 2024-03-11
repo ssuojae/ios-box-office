@@ -2,7 +2,7 @@
 import Foundation
 
 
-/// 출처: https://medium.com/@vyacheslavansimov/swift-utilities-thread-safe-property-5498afc2eb53
+/// 참고: https://medium.com/@vyacheslavansimov/swift-utilities-thread-safe-property-5498afc2eb53
 @propertyWrapper
 struct SynchronizedLock<Value> {
     private var value: Value
