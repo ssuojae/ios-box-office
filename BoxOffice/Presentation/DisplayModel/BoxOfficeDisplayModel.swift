@@ -1,18 +1,19 @@
 
 import Foundation
 
+
 enum Section {
     case main
 }
 
 struct BoxOfficeDisplayModel: Hashable {
-    let id: UUID = UUID()
-    let rank: String
-    let rankIntensity: String
+    var id: UUID = UUID()
+    var rank: String
+    var rankIntensity: String
     let isNew: Bool
-    let movieName: String
+    var movieName: String
     let audienceCount: String
-    let audienceAccount: String
+    var audienceAccount: String
 }
 
 extension BoxOfficeDisplayModel {
@@ -20,3 +21,4 @@ extension BoxOfficeDisplayModel {
         return BoxOfficeDisplayModel(rank: "", rankIntensity: "0", isNew: false, movieName: "Loading...", audienceCount: "", audienceAccount: "")
     }
 }
+

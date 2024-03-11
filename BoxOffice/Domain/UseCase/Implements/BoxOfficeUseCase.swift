@@ -3,6 +3,7 @@ import Foundation
 
 final class BoxOfficeUseCase: BoxOfficeUseCaseProtocol {
     
+    
     private let moviesRepository: MovieRepositoryProtocol
     
     init(moviesRepository: MovieRepositoryProtocol) {

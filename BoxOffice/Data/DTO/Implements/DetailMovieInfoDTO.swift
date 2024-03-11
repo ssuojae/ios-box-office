@@ -137,3 +137,4 @@ extension MovieInfo: Mappable {
                                openDate: openDate)
     }
 }
+

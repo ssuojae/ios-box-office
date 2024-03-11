@@ -9,20 +9,23 @@ final class DependencyEnvironment {
     
     private(set) lazy var sessionProvider: SessionProvidable = SessionProvider()
     
-    private(set) lazy var decodeProvider: JsonDecodalbe = JsonDecoder(decoder: JSONDecoder())
+    private(set) lazy var decodeProvider: URLDecodeProtocol = URLDecoder()
 
     private(set) lazy var urlBuilder: URLBuilder = URLBuilder(baseURLProvider: BaseURLManager.shared)
     
+    private(set) lazy var requestBuilder: RequestBuilderProtocol = RequestBuilder()
+
     private(set) lazy var networkManager: Networkmanagable = {
         NetworkManager(sessionProvider: sessionProvider, decoder: decodeProvider)
     }()
 
     private(set) lazy var movieRepository: MovieRepositoryProtocol = {
-        MovieRepository(networkManager: networkManager, urlBuilder: urlBuilder)
+        MovieRepository(networkManager: networkManager, urlBuilder: urlBuilder, requestBuilder: requestBuilder)
     }()
     
     private(set) lazy var boxOfficeUseCase: BoxOfficeUseCaseProtocol = BoxOfficeUseCase(moviesRepository: movieRepository)
     
+    @available(iOS 14.0, *)
     func makeBoxOfficeCollectionViewController() -> BoxOfficeViewController {
         BoxOfficeViewController(boxOfficeUseCase: boxOfficeUseCase)
     }

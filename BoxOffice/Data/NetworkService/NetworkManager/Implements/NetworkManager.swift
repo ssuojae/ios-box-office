@@ -1,20 +1,17 @@
 
 import Foundation
 
-
 class NetworkManager: Networkmanagable {
     
     private let sessionProvider: SessionProvidable
-    private let decoder: JsonDecodalbe
+    private let decoder: URLDecodeProtocol
     
-    init(sessionProvider: SessionProvidable, decoder: JsonDecodalbe) {
+    init(sessionProvider: SessionProvidable, decoder: URLDecodeProtocol) {
         self.sessionProvider = sessionProvider
         self.decoder = decoder
     }
     
-    func bringNetworkResult<T: Decodable>(from url: URL) async -> Result<T, NetworkError> {
-        guard let request = makeURLRequest(from: url)
-        else { return .failure(.urlError) }
+    func bringNetworkResult<T: Decodable>(request: URLRequest) async -> Result<T, NetworkError> {
         
         let result = await sessionProvider.loadAPIRequest(using: request)
         
@@ -26,10 +23,6 @@ class NetworkManager: Networkmanagable {
             return .failure(networkError)
         }
     }
-    
-    private func makeURLRequest(from url: URL) -> URLRequest? {
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        return request
-    }
+        
 }
+ 

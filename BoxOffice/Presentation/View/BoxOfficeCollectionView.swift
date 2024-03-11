@@ -1,7 +1,6 @@
-
 import UIKit
 
-final class BoxOfficeCollectionView: UICollectionView {
+class BoxOfficeCollectionView: UICollectionView {
 
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: BoxOfficeCollectionView.createLayout())
@@ -32,4 +31,3 @@ final class BoxOfficeCollectionView: UICollectionView {
         return layout
     }
 }
-
