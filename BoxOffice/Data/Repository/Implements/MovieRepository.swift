@@ -41,7 +41,7 @@ final class MovieRepository: MovieRepositoryProtocol {
     private func makeBoxOfficeURL() -> URL? {
         let url = urlBuilder
             .setBaseURL(type: .kobis)
-            .setPath("/boxoffice/searchDailyBoxOfficeList.json")
+            .setPath("/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json")
             .addQueryItem(name: "targetDt", value: Date().dayBefore.formattedDate(withFormat: "yyyyMMdd"))
             .setApiKey(apiKey: ENV.API_KEY)
             .build()
@@ -52,9 +52,19 @@ final class MovieRepository: MovieRepositoryProtocol {
     private func makeMovieDetailURL(movieCode: String) -> URL? {
         let url = urlBuilder
             .setBaseURL(type: .kobis)
-            .setPath("/movie/searchMovieInfo.json")
+            .setPath("/kobisopenapi/webservice/rest/movie/searchMovieInfo.json")
             .addQueryItem(name: "movieCd", value: movieCode)
             .setApiKey(apiKey: ENV.API_KEY)
+            .build()
+        
+        return url
+    }
+    
+    private func makeKakaoImageSearchURL(query: String) -> URL? {
+        let url = urlBuilder
+            .setBaseURL(type: .kobis)
+            .setPath("/kobisopenapi/webservice/rest/movie/searchMovieInfo.json")
+            .addQueryItem(name: "query", value: query)
             .build()
         
         return url

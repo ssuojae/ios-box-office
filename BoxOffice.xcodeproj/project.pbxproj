@@ -44,6 +44,7 @@
 		C76965F92B86EE7200EF8F87 /* SessionProvidable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76965F82B86EE7200EF8F87 /* SessionProvidable.swift */; };
 		C77ADAB82B7C766A0069AE0F /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77ADAB72B7C766A0069AE0F /* NetworkError.swift */; };
 		C77ADABA2B7C76B40069AE0F /* JsonDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77ADAB92B7C76B40069AE0F /* JsonDecoder.swift */; };
+		C78D98792B9EA43B00D8000A /* RebuiltBaseURLManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78D98782B9EA43B00D8000A /* RebuiltBaseURLManager.swift */; };
 		C7A1E7682B882C3A00F9AB6B /* MovieRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1E7672B882C3A00F9AB6B /* MovieRepositoryProtocol.swift */; };
 		C7A1E76A2B8831AA00F9AB6B /* DomainError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1E7692B8831AA00F9AB6B /* DomainError.swift */; };
 		C7A1E76D2B883AAC00F9AB6B /* StubJSONData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1E76C2B883AAC00F9AB6B /* StubJSONData.swift */; };
@@ -103,6 +104,7 @@
 		C76965F82B86EE7200EF8F87 /* SessionProvidable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionProvidable.swift; sourceTree = "<group>"; };
 		C77ADAB72B7C766A0069AE0F /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		C77ADAB92B7C76B40069AE0F /* JsonDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonDecoder.swift; sourceTree = "<group>"; };
+		C78D98782B9EA43B00D8000A /* RebuiltBaseURLManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RebuiltBaseURLManager.swift; sourceTree = "<group>"; };
 		C7A1E7672B882C3A00F9AB6B /* MovieRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieRepositoryProtocol.swift; sourceTree = "<group>"; };
 		C7A1E7692B8831AA00F9AB6B /* DomainError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainError.swift; sourceTree = "<group>"; };
 		C7A1E76C2B883AAC00F9AB6B /* StubJSONData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubJSONData.swift; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 		0827981A2B8774E700ACC723 /* URLProvider */ = {
 			isa = PBXGroup;
 			children = (
+				C78D98782B9EA43B00D8000A /* RebuiltBaseURLManager.swift */,
 				0827981E2B87751200ACC723 /* Interfaces */,
 				0827981D2B87750D00ACC723 /* Implements */,
 			);
@@ -651,6 +654,7 @@
 				0827981C2B8774F900ACC723 /* BaseURLProvidable.swift in Sources */,
 				C76965F32B86ECBD00EF8F87 /* BoxOfficeUseCase.swift in Sources */,
 				082798262B87771800ACC723 /* URLBuilderProtocol.swift in Sources */,
+				C78D98792B9EA43B00D8000A /* RebuiltBaseURLManager.swift in Sources */,
 				C76965EF2B86E89B00EF8F87 /* MovieRepository.swift in Sources */,
 				08A6CE5A2B99A83C00F2F2CA /* NetworkManagable.swift in Sources */,
 				0827983C2B88328B00ACC723 /* BoxOfficeUseCaseProtocol.swift in Sources */,

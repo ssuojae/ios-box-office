@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func configureURL() {
-        guard let url = URL(string: "https://www.kobis.or.kr/kobisopenapi/webservice/rest") else {
+        guard let url = URL(string: "https://www.kobis.or.kr") else {
             return print("url이 생성되지 않았습니다.") }
         BaseURLManager.shared.configure(url, for: .kobis)
     }
