@@ -76,7 +76,7 @@ final class MovieRepository: MovieRepositoryProtocol {
         return url
     }
     
-    private func makeRequest(url: URL, key: String, value: String ) -> URLRequest? {
+    private func makeRequest(url: URL, key: String? = nil, value: String? = nil) -> URLRequest? {
         return requestBuilder
             .setURL(url)
             .setHTTPMethod(.get)

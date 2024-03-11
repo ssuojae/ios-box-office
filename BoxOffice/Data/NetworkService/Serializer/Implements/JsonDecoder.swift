@@ -1,12 +1,20 @@
 
 import Foundation
 
-
-struct URLDecoder: URLDecodeProtocol {
+struct JsonDecoder: JsonDecodeProtocol {
     
+    private let decoder: JSONDecoder
+
+    init(decoder: JSONDecoder) {
+        self.decoder = decoder
+    }
+
     func decode<T: Decodable>(_ data: Data) -> Result<T, NetworkError> {
-        guard let decodedData = try? JSONDecoder().decode(T.self, from: data)
+        guard let decodedData = try? decoder.decode(T.self, from: data)
         else { return .failure(.decodingError) }
         return .success(decodedData)
     }
 }
+
+
+

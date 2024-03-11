@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		082798172B87747300ACC723 /* BaseURLType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082798162B87747300ACC723 /* BaseURLType.swift */; };
-		082798362B882B8400ACC723 /* Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082798352B882B8400ACC723 /* Decodable.swift */; };
+		082798362B882B8400ACC723 /* JsonDecodeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082798352B882B8400ACC723 /* JsonDecodeProtocol.swift */; };
 		082798382B88311400ACC723 /* MappableProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082798372B88311400ACC723 /* MappableProtocol.swift */; };
 		0827983C2B88328B00ACC723 /* BoxOfficeUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0827983B2B88328B00ACC723 /* BoxOfficeUseCaseProtocol.swift */; };
 		0827983E2B88339900ACC723 /* DependencyEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0827983D2B88339900ACC723 /* DependencyEnvironment.swift */; };
@@ -68,7 +68,7 @@
 
 /* Begin PBXFileReference section */
 		082798162B87747300ACC723 /* BaseURLType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseURLType.swift; sourceTree = "<group>"; };
-		082798352B882B8400ACC723 /* Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decodable.swift; sourceTree = "<group>"; };
+		082798352B882B8400ACC723 /* JsonDecodeProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonDecodeProtocol.swift; sourceTree = "<group>"; };
 		082798372B88311400ACC723 /* MappableProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappableProtocol.swift; sourceTree = "<group>"; };
 		0827983B2B88328B00ACC723 /* BoxOfficeUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxOfficeUseCaseProtocol.swift; sourceTree = "<group>"; };
 		0827983D2B88339900ACC723 /* DependencyEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyEnvironment.swift; sourceTree = "<group>"; };
@@ -140,7 +140,7 @@
 		082798332B882B3600ACC723 /* Interfaces */ = {
 			isa = PBXGroup;
 			children = (
-				082798352B882B8400ACC723 /* Decodable.swift */,
+				082798352B882B8400ACC723 /* JsonDecodeProtocol.swift */,
 			);
 			path = Interfaces;
 			sourceTree = "<group>";
@@ -681,7 +681,7 @@
 				0866909D2B98748A003673E9 /* SynchronizedLockPropertyWrapper.swift in Sources */,
 				C7A1E7682B882C3A00F9AB6B /* MovieRepositoryProtocol.swift in Sources */,
 				084E37762B95E79D007C51FE /* BaseURLManager.swift in Sources */,
-				082798362B882B8400ACC723 /* Decodable.swift in Sources */,
+				082798362B882B8400ACC723 /* JsonDecodeProtocol.swift in Sources */,
 				084E378E2B95FE27007C51FE /* BoxOfficeDisplayModel.swift in Sources */,
 				084E377A2B95E79D007C51FE /* URLBuilderProtocol.swift in Sources */,
 				C76965F32B86ECBD00EF8F87 /* BoxOfficeUseCase.swift in Sources */,

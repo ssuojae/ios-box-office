@@ -9,7 +9,7 @@ final class DependencyEnvironment {
     
     private(set) lazy var sessionProvider: SessionProvidable = SessionProvider()
     
-    private(set) lazy var decodeProvider: URLDecodeProtocol = URLDecoder()
+    private(set) lazy var decodeProvider: JsonDecodeProtocol = JsonDecoder(decoder: JSONDecoder())
 
     private(set) lazy var urlBuilder: URLBuilder = URLBuilder(baseURLProvider: BaseURLManager.shared)
     
