@@ -5,9 +5,9 @@ import Foundation
 class NetworkManager: Networkmanagable {
     
     private let sessionProvider: SessionProvidable
-    private let decoder: URLDecodeProtocol
+    private let decoder: JsonDecodalbe
     
-    init(sessionProvider: SessionProvidable, decoder: URLDecodeProtocol) {
+    init(sessionProvider: SessionProvidable, decoder: JsonDecodalbe) {
         self.sessionProvider = sessionProvider
         self.decoder = decoder
     }
