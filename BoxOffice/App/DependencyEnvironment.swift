@@ -5,7 +5,7 @@ final class DependencyEnvironment {
     /// 디코더 설정 셋팅 예시
     private let jsonDecoder: JSONDecoder = {
         let jsonDecoder = JSONDecoder()
-        jsonDecoder.dateDecodingStrategy = .iso8601
+//        jsonDecoder.dateDecodingStrategy = .iso8601
         return jsonDecoder
     }()
 

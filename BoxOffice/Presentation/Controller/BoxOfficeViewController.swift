@@ -6,7 +6,7 @@ final class BoxOfficeViewController: UIViewController {
     
     @SynchronizedLock private var movies = [BoxOfficeDisplayModel]()
     private var fetchTask: Task<Void, Never>?
-    
+
     private var boxOfficeCollectionView: BoxOfficeCollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, BoxOfficeDisplayModel>!
     private var cellRegistration: UICollectionView.CellRegistration<BoxOfficeCell, BoxOfficeDisplayModel>!
@@ -30,7 +30,10 @@ extension BoxOfficeViewController {
         super.viewDidLoad()
         setupUI()
         configureDataSource()
+        //fetchTask = Task {
         fetchBoxOfficeData()
+        fetchKakaoImageSearchData()
+        //}
     }
 }
 
@@ -53,6 +56,7 @@ private extension BoxOfficeViewController {
         view.backgroundColor = boxOfficeCollectionView.backgroundColor
         view.addSubview(boxOfficeCollectionView)
         boxOfficeCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        boxOfficeCollectionView.delegate = self
         
         NSLayoutConstraint.activate([
             boxOfficeCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
@@ -91,7 +95,7 @@ private extension BoxOfficeViewController {
 // MARK: - Fetch Data
 private extension BoxOfficeViewController {
     func fetchBoxOfficeData() {
-        fetchTask = Task {
+        Task {
             let result = await boxOfficeUseCase.fetchBoxOfficeData()
             handleFetchResult(result)
         }
@@ -122,6 +126,22 @@ private extension BoxOfficeViewController {
     }
 }
 
+// MARK: - Fetch Image Data
+private extension BoxOfficeViewController {
+    func fetchKakaoImageSearchData() {
+        Task {
+        let result = await boxOfficeUseCase.fetchKakaoImageSearchData(query: "파묘 영화 포스터")
+        switch result {
+        case .success(let imageURL):
+            print("이미지URL")
+            print(imageURL)
+        case .failure(let error):
+            presentAlert(title: "네트워크 오류", message: "네트워크에 문제가 있습니다 \(error)", confirmTitle: "확인")
+        }
+        }
+    }
+}
+
 // MARK: - Apply Diffable DataSource
 private extension BoxOfficeViewController {
     func configureDataSource() {
@@ -141,5 +161,20 @@ private extension BoxOfficeViewController {
         snapshot.appendSections([.main])
         snapshot.appendItems(movies, toSection: .main)
         dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
+    }
+}
+
+extension BoxOfficeViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let menuItem = self.dataSource.itemIdentifier(for: indexPath) else { return }
+        
+        print("\(menuItem)")
+        
+        collectionView.deselectItem(at: indexPath, animated: true)
+        
+        if let navigationController = self.navigationController {
+            let viewController = TestViewController()
+                navigationController.pushViewController(viewController, animated: true)
+        }
     }
 }

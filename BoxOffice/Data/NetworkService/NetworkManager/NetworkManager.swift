@@ -17,6 +17,7 @@ final class NetworkManager: NetworkManagerProtocol {
         switch result {
         case .success(let networkResponse):
             guard let data = networkResponse.data else { return .failure(.connectivity) }
+            print(data)
             return decoder.decode(data)
         case .failure(let networkError):
             return .failure(networkError)

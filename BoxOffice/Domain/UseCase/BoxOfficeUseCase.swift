@@ -17,4 +17,9 @@ final class BoxOfficeUseCase: BoxOfficeUseCaseProtocol {
         let result = await moviesRepository.requestDetailMovieData(movie: movie)
         return result
     }
+    
+    func fetchKakaoImageSearchData(query: String) async -> Result<[KakaoSearchImage], DomainError> {
+        let result = await moviesRepository.requestKaKaoImageSearch(query: query)
+        return result
+    }
 }

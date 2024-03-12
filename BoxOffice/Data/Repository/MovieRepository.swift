@@ -26,7 +26,7 @@ final class MovieRepository: MovieRepositoryProtocol {
     }
     
     func requestDetailMovieData(movie: String) async -> Result<MovieDetailInfo, DomainError> {
-        guard let url = makeBoxOfficeURL(),
+        guard let url = makeMovieDetailURL(movieCode: movie),
               let request = makeRequest(url: url) else { logNetworkError(.requestError); return .failure(.networkIssue) }
         
         let result: Result<DetailMovieInfoDTO, NetworkError> = await networkManager.bringNetworkResult(from: request)
@@ -34,6 +34,23 @@ final class MovieRepository: MovieRepositoryProtocol {
         switch result {
         case .success(let detailMovieInfoDTO):
             return .success(detailMovieInfoDTO.movieInfoResult.movieInfo.toEntity())
+        case .failure(let networkError):
+            logNetworkError(networkError)
+            return .failure(networkError.mapToDomainError())
+        }
+    }
+    
+    func requestKaKaoImageSearch(query: String) async -> Result<[KakaoSearchImage], DomainError> {
+        print("호출")
+        guard let url = makeKakaoImageSearch(query: query),
+              let request = makeKakaoRequest(url: url) else { logNetworkError(.requestError); return .failure(.networkIssue) }
+        print(url)
+        
+        let result: Result<KakaoImageSearchDTO, NetworkError> = await networkManager.bringNetworkResult(from: request)
+        
+        switch result {
+        case .success(let kakaoImageSearchDTO):
+            return .success(kakaoImageSearchDTO.documents.map { $0.toEntity() })
         case .failure(let networkError):
             logNetworkError(networkError)
             return .failure(networkError.mapToDomainError())
@@ -50,10 +67,23 @@ final class MovieRepository: MovieRepositoryProtocol {
         return url
     }
     
+    private func makeKakaoImageSearch(query: String) -> URL? {
+        let url = EndPoint(urlInformation: .imageSearch(query: query), apiHost: .kakao).url
+        return url
+    }
+    
     private func makeRequest(url: URL) -> URLRequest? {
         return requestBuilder
             .setURL(url)
             .setHTTPMethod(.get)
+            .build()
+    }
+    
+    private func makeKakaoRequest(url: URL) -> URLRequest? {
+        return requestBuilder
+            .setURL(url)
+            .setHTTPMethod(.get)
+            .addHeaderField(key: "Authorization", value: "KakaoAK 810c0a8965ed0db2eaa292f49a4f58c2")
             .build()
     }
     

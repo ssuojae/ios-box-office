@@ -11,6 +11,7 @@ struct JsonDecoder: JsonDecodeProtocol {
     func decode<T: Decodable>(_ data: Data) -> Result<T, NetworkError> {
         guard let decodedData = try? jsonDecoder.decode(T.self, from: data)
         else { return .failure(.decodingError) }
+        print(decodedData)
         return .success(decodedData)
     }
 }
