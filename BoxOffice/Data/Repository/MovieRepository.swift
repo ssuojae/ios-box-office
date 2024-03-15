@@ -40,6 +40,23 @@ final class MovieRepository: MovieRepositoryProtocol {
         }
     }
     
+    func requestKaKaoImageSearch(query: String) async -> Result<[KakaoSearchImage], DomainError> {
+        guard let url = makeKakaoImageSearch(query: query),
+              let request = makeKakaoRequest(url: url) else { logNetworkError(.requestError); return .failure(.networkIssue) }
+        print(url)
+        
+        let result: Result<KakaoImageSearchDTO, NetworkError> = await networkManager.performRequest(from: request)
+        
+        switch result {
+        case .success(let kakaoImageSearchDTO):
+            return .success(kakaoImageSearchDTO.documents.map { $0.toEntity() })
+        case .failure(let networkError):
+            logNetworkError(networkError)
+            return .failure(networkError.mapToDomainError())
+        }
+    }
+
+    
     private func makeBoxOfficeURL() -> URL? {
         let url = EndPoint(urlInformation: .daily(date: Date().dayBefore.formattedDate(withFormat: "yyyyMMdd")), apiHost: .kobis).url
         return url
@@ -50,10 +67,27 @@ final class MovieRepository: MovieRepositoryProtocol {
         return url
     }
     
+    
+    private func makeKakaoImageSearch(query: String) -> URL? {
+        let url = EndPoint(urlInformation: .imageSearch(query: query), apiHost: .kakao).url
+        return url
+    }
+
+    
     private func makeRequest(url: URL) -> URLRequest? {
         return requestBuilder
             .setURL(url)
             .setHTTPMethod(.get)
+            .setCachePolicy(.returnCacheDataElseLoad, forseconds: 13)
+            .build()
+    }
+    
+    private func makeKakaoRequest(url: URL) -> URLRequest? {
+        return requestBuilder
+            .setURL(url)
+            .setHTTPMethod(.get)
+            .setCachePolicy(.returnCacheDataElseLoad, forseconds: 13)
+            .addHeaderField(key: "Authorization", value: "KakaoAK 810c0a8965ed0db2eaa292f49a4f58c2")
             .build()
     }
     

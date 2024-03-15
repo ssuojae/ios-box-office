@@ -6,22 +6,24 @@ enum ViewControllerType {
     //case 이후뷰컨들
 }
 
-
 final class DependencyEnvironment {
-    /// 디코더 설정 셋팅 예시
-    private let jsonDecoder: JSONDecoder = {
-        let jsonDecoder = JSONDecoder()
-        jsonDecoder.dateDecodingStrategy = .iso8601
-        return jsonDecoder
-    }()
+    
+    private let decoderFactory: DecoderFactory
+    private let sessionFactory: SessionFactoryProtocol
+    
+    init(decoderFactory: DecoderFactory, sessionFactory: SessionFactoryProtocol) {
+        self.decoderFactory = decoderFactory
+        self.sessionFactory = sessionFactory
+    }
 
-    private lazy var decodeProvider: DecoderProtocol = JsonDecoder(jsonDecoder: jsonDecoder)
-
-    private lazy var sessionProvider: SessionProvidable = SessionProvider()
+    
+    private lazy var jsonDecodeProvider: DecoderProtocol = JsonDecoder(jsonDecoder: decoderFactory.makeJsonDecoder())
+    
+    private lazy var sessionProvider: SessionProvidable = sessionFactory.makeSession()
     
     private lazy var requestBuidler: RequestBuilderProtocol = RequestBuilder()
     
-    private lazy var networkManager: NetworkManagerProtocol = NetworkManager(sessionProvider: sessionProvider, decoder: decodeProvider)
+    private lazy var networkManager: NetworkManagerProtocol = NetworkManager(sessionProvider: sessionProvider, decoder: jsonDecodeProvider)
 
     private lazy var movieRepository: MovieRepositoryProtocol = MovieRepository(networkManager: networkManager, requestBuilder: requestBuidler)
     
