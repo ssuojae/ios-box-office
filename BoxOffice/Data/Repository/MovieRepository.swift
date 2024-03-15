@@ -43,7 +43,6 @@ final class MovieRepository: MovieRepositoryProtocol {
     func requestKaKaoImageSearch(query: String) async -> Result<[KakaoSearchImage], DomainError> {
         guard let url = makeKakaoImageSearch(query: query),
               let request = makeKakaoRequest(url: url) else { logNetworkError(.requestError); return .failure(.networkIssue) }
-        print(url)
         
         let result: Result<KakaoImageSearchDTO, NetworkError> = await networkManager.performRequest(from: request)
         
@@ -78,7 +77,7 @@ final class MovieRepository: MovieRepositoryProtocol {
         return requestBuilder
             .setURL(url)
             .setHTTPMethod(.get)
-            .setCachePolicy(.returnCacheDataElseLoad, forseconds: 13)
+            .setCachePolicy(.returnCacheDataElseLoad, forseconds: 30)
             .build()
     }
     
@@ -86,7 +85,7 @@ final class MovieRepository: MovieRepositoryProtocol {
         return requestBuilder
             .setURL(url)
             .setHTTPMethod(.get)
-            .setCachePolicy(.returnCacheDataElseLoad, forseconds: 13)
+            .setCachePolicy(.returnCacheDataElseLoad, forseconds: 30)
             .addHeaderField(key: "Authorization", value: "KakaoAK 810c0a8965ed0db2eaa292f49a4f58c2")
             .build()
     }

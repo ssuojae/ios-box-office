@@ -7,22 +7,21 @@ final class RequestBuilder: RequestBuilderProtocol {
     private var lastDate = Date()
         
     /// URL 설정
-    func setURL(_ url: URL) -> Self {
+    func setURL(_ url: URL) -> RequestBuilder {
         self.request = URLRequest(url: url)
         return self
     }
     
     /// HTTP 메소드 설정
-    func setHTTPMethod(_ method: HTTPMethodType) -> Self {
+    func setHTTPMethod(_ method: HTTPMethodType) -> RequestBuilder {
         request?.httpMethod = method.rawValue
         return self
     }
     
     /// Cache 설정
-    func setCachePolicy(_ cachePolicy: URLRequest.CachePolicy, forseconds seconds: Double) -> Self {
+    func setCachePolicy(_ cachePolicy: URLRequest.CachePolicy, forseconds seconds: Double) -> RequestBuilder {
         if lastDate.timeIntervalSinceNow < -seconds {
             clearCache()
-            self.request?.cachePolicy = .reloadIgnoringLocalCacheData
         } else {
             self.request?.cachePolicy = cachePolicy
         }
