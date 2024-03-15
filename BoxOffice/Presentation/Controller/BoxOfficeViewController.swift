@@ -38,30 +38,23 @@ extension BoxOfficeViewController {
 private extension BoxOfficeViewController {
     func setupUI() {
         setupBoxOfficeView()
+        addView()
+        setupConstraints()
         configureCellRegistration()
         configureNavigationBar()
         setupRefreshControl()
-    }
-    
-    func configureNavigationBar() {
-        navigationItem.title = Date().formattedDate(withFormat: "YYYY-MM-dd")
     }
     
     // 커스텀 뷰 설정
     func setupBoxOfficeView() {
         boxOfficeCollectionView = BoxOfficeCollectionView(frame: .zero)
         view.backgroundColor = boxOfficeCollectionView.backgroundColor
-        view.addSubview(boxOfficeCollectionView)
-        boxOfficeCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            boxOfficeCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            boxOfficeCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            boxOfficeCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            boxOfficeCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
-        ])
-        
-        configureCellRegistration()
+    }
+    
+    func addView() {
+        [boxOfficeCollectionView].forEach {
+            view.addSubview($0)
+        }
     }
     
     // 셀 등록 설정 메서드
@@ -86,6 +79,25 @@ private extension BoxOfficeViewController {
     @objc private func refreshBoxOfficeData() {
         fetchBoxOfficeData()
     }
+    
+    func configureNavigationBar() {
+        navigationItem.title = Date().formattedDate(withFormat: "YYYY-MM-dd")
+    }
+
+    func setupConstraints() {
+        [boxOfficeCollectionView].forEach {
+            $0?.translatesAutoresizingMaskIntoConstraints = false
+        }
+        
+        // 컬렉션 뷰
+        NSLayoutConstraint.activate([
+            boxOfficeCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            boxOfficeCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            boxOfficeCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            boxOfficeCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
+        ])
+    }
+
 }
 
 // MARK: - Fetch Data

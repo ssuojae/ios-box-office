@@ -16,7 +16,6 @@ final class DependencyEnvironment {
         self.sessionFactory = sessionFactory
     }
 
-    
     private lazy var jsonDecodeProvider: DecoderProtocol = JsonDecoder(jsonDecoder: decoderFactory.makeJsonDecoder())
     
     private lazy var sessionProvider: SessionProvidable = sessionFactory.makeSession()
