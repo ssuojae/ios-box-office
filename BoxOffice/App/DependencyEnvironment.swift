@@ -19,11 +19,9 @@ final class DependencyEnvironment {
 
     private lazy var sessionProvider: SessionProvidable = SessionProvider()
     
-    private lazy var requestBuidler: RequestBuilderProtocol = RequestBuilder()
-    
-    private lazy var networkManager: NetworkManagerProtocol = NetworkManager(sessionProvider: sessionProvider, decoder: decodeProvider)
+    private lazy var requestProvider: RequestProvidable = RequestProvider()
 
-    private lazy var movieRepository: MovieRepositoryProtocol = MovieRepository(networkManager: networkManager, requestBuilder: requestBuidler)
+    private lazy var movieRepository: MovieRepositoryProtocol = MovieRepository(sessionProvider: sessionProvider, requestProvider: requestProvider, decoder: decodeProvider)
     
     private lazy var boxOfficeUseCase: BoxOfficeUseCaseProtocol = BoxOfficeUseCase(moviesRepository: movieRepository)
 }
