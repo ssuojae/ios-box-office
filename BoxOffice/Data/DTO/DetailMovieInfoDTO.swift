@@ -129,3 +129,11 @@ struct Staff: Decodable {
         case staffRoleName = "staffRoleNm"
     }
 }
+
+// MARK: - Mapping
+extension MovieInfo: Mappable {
+    func toEntity() -> MovieDetailInfo {
+        return MovieDetailInfo(movieName: movieName,
+                               openDate: openDate)
+    }
+}

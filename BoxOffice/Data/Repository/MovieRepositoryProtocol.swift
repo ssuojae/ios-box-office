@@ -1,7 +1,6 @@
 
 protocol MovieRepositoryProtocol {
-    func prepareBoxOfficeDataRequest<T: Decodable>() async -> T?
-    func prepareDetailMovieDataRequest<T: Decodable>(movieCode: String) async -> T?
+    func requestBoxofficeData() async -> Result<[BoxOfficeMovie], DomainError>
+    func requestDetailMovieData(movie: String) async -> Result<MovieDetailInfo, DomainError>
+    func requestKaKaoImageSearch(query: String) async -> Result<[KakaoSearchImage], DomainError>
 }
-
-
