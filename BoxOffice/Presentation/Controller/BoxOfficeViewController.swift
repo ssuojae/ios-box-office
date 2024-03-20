@@ -26,18 +26,24 @@ final class BoxOfficeViewController: UIViewController {
 
 // MARK: - 생명주기
 extension BoxOfficeViewController {
+    override func loadView() {
+        self.boxOfficeCollectionView = BoxOfficeCollectionView(frame: .zero)
+        self.view = boxOfficeCollectionView
+        
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         configureDataSource()
         fetchBoxOfficeData()
+        fetchBoxOfficeDetailData()
     }
 }
 
 // MARK: - Setup UI
 private extension BoxOfficeViewController {
     func setupUI() {
-        setupBoxOfficeView()
         configureCellRegistration()
         configureNavigationBar()
         setupRefreshControl()
@@ -45,23 +51,6 @@ private extension BoxOfficeViewController {
     
     func configureNavigationBar() {
         navigationItem.title = Date().formattedDate(withFormat: "YYYY-MM-dd")
-    }
-    
-    // 커스텀 뷰 설정
-    func setupBoxOfficeView() {
-        boxOfficeCollectionView = BoxOfficeCollectionView(frame: .zero)
-        view.backgroundColor = boxOfficeCollectionView.backgroundColor
-        view.addSubview(boxOfficeCollectionView)
-        boxOfficeCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            boxOfficeCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            boxOfficeCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            boxOfficeCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            boxOfficeCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
-        ])
-        
-        configureCellRegistration()
     }
     
     // 셀 등록 설정 메서드
@@ -93,21 +82,32 @@ private extension BoxOfficeViewController {
     func fetchBoxOfficeData() {
         fetchTask = Task {
             let result = await boxOfficeUseCase.fetchBoxOfficeData()
-            handleFetchResult(result)
+            handleBoxOfficeResult(result)
+        }
+        self.boxOfficeCollectionView.refreshControl?.endRefreshing()
+    }
+    
+    func handleBoxOfficeResult(_ result: [BoxOfficeMovie]?) {
+        guard let boxOfficeMovies = result else { return }
+        let displayMovies = mapEntityToDisplayModel(boxOfficeMovies)
+        self.movies = displayMovies
+        applySnapshot(movies: displayMovies, animatingDifferences: true)
+    }
+    
+    func fetchBoxOfficeDetailData() {
+        fetchTask = Task {
+            let result = await boxOfficeUseCase.fetchDetailMovieData(movie: "20236488")
+            handleBoxOfficeDetailResult(result)
         }
     }
     
+    func handleBoxOfficeDetailResult(_ result: MovieDetailInfo) {
+            print(result)
+    }
+    
     @MainActor
-    func handleFetchResult(_ result: Result<[BoxOfficeMovie], DomainError>) {
-        boxOfficeCollectionView.refreshControl?.endRefreshing()
-        switch result {
-        case .success(let boxOfficeMovies):
-            let displayMovies = mapEntityToDisplayModel(boxOfficeMovies)
-            self.movies = displayMovies
-            applySnapshot(movies: displayMovies, animatingDifferences: true)
-        case .failure(let error):
-            presentAlert(title: "네트워크 오류", message: "네트워크에 문제가 있습니다 \(error)", confirmTitle: "확인")
-        }
+    func presentAlert(error: DomainError) {
+        self.presentAlert(title: "네트워크 오류", message: "네트워크에 문제가 있습니다 \(error)", confirmTitle: "확인")
     }
     
     func mapEntityToDisplayModel(_ boxOfficeMovies: [BoxOfficeMovie]) -> [BoxOfficeDisplayModel] {

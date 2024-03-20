@@ -8,9 +8,9 @@ enum RequestInformation {
     var url: URL? {
         switch self {
         case .dailyMovie:
-            return EndPoint(urlInformation: .daily(date: Date().dayBefore.formattedDate(withFormat: "yyyyMMdd")), apiHost: .kobis).url
+            return EndPoint(urlInformation: .daily(date: Date().dayBefore.formattedDate(withFormat: "yyyyMMdd")), apiHost: .kobis, scheme: .https).url
         case .detailMovie(let code):
-            return EndPoint(urlInformation: .detail(code: code), apiHost: .kobis).url
+            return EndPoint(urlInformation: .detail(code: code), apiHost: .kobis, scheme: .https).url
         }
     }
     

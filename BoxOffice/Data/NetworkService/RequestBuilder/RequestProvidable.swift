@@ -2,7 +2,7 @@
 import Foundation
 
 protocol RequestProvidable {
-    func makeRequest(requestInformation: RequestInformation) -> URLRequest?
+    var request: URLRequest? { get }
 }
 
 

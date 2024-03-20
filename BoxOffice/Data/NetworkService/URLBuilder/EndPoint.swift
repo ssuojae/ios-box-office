@@ -2,13 +2,14 @@
 import Foundation
 
 struct EndPoint: EndPointMakable {
-    let apiHost: String
+    private let apiHost: String
     private let urlInformation: URLInformation
-    private let scheme: String = "https"
+    private let scheme: String
     
-    init(urlInformation: URLInformation, apiHost: APIHostType) {
+    init(urlInformation: URLInformation, apiHost: APIHostType, scheme: SchemeType) {
         self.urlInformation = urlInformation
         self.apiHost = apiHost.rawValue
+        self.scheme = scheme.rawValue
     }
     
     var url: URL? {
