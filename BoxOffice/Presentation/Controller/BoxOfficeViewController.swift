@@ -2,6 +2,7 @@
 import UIKit
 
 final class BoxOfficeViewController: UIViewController {
+    
     private let boxOfficeUseCase: BoxOfficeUseCaseProtocol
     
     @SynchronizedLock private var movies = [BoxOfficeDisplayModel]()
@@ -26,35 +27,33 @@ final class BoxOfficeViewController: UIViewController {
 
 // MARK: - 생명주기
 extension BoxOfficeViewController {
+    
+    override func loadView() {
+        self.boxOfficeCollectionView = BoxOfficeCollectionView(frame: .zero)
+        self.view = boxOfficeCollectionView
+
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         configureDataSource()
         fetchBoxOfficeData()
+        boxOfficeCollectionView.delegate = self
+
     }
 }
 
 // MARK: - Setup UI
 private extension BoxOfficeViewController {
     func setupUI() {
-        setupBoxOfficeView()
-        addView()
-        setupConstraints()
         configureCellRegistration()
         configureNavigationBar()
         setupRefreshControl()
     }
     
-    // 커스텀 뷰 설정
-    func setupBoxOfficeView() {
-        boxOfficeCollectionView = BoxOfficeCollectionView(frame: .zero)
-        view.backgroundColor = boxOfficeCollectionView.backgroundColor
-    }
-    
-    func addView() {
-        [boxOfficeCollectionView].forEach {
-            view.addSubview($0)
-        }
+    func configureNavigationBar() {
+        navigationItem.title = Date().formattedDate(withFormat: "YYYY-MM-dd")
     }
     
     // 셀 등록 설정 메서드
@@ -79,25 +78,6 @@ private extension BoxOfficeViewController {
     @objc private func refreshBoxOfficeData() {
         fetchBoxOfficeData()
     }
-    
-    func configureNavigationBar() {
-        navigationItem.title = Date().formattedDate(withFormat: "YYYY-MM-dd")
-    }
-
-    func setupConstraints() {
-        [boxOfficeCollectionView].forEach {
-            $0?.translatesAutoresizingMaskIntoConstraints = false
-        }
-        
-        // 컬렉션 뷰
-        NSLayoutConstraint.activate([
-            boxOfficeCollectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            boxOfficeCollectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            boxOfficeCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            boxOfficeCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
-        ])
-    }
-
 }
 
 // MARK: - Fetch Data
@@ -107,19 +87,23 @@ private extension BoxOfficeViewController {
             let result = await boxOfficeUseCase.fetchBoxOfficeData()
             handleFetchResult(result)
         }
+        self.boxOfficeCollectionView.refreshControl?.endRefreshing()
     }
     
-    @MainActor
     func handleFetchResult(_ result: Result<[BoxOfficeMovie], DomainError>) {
-        boxOfficeCollectionView.refreshControl?.endRefreshing()
         switch result {
         case .success(let boxOfficeMovies):
             let displayMovies = mapEntityToDisplayModel(boxOfficeMovies)
             self.movies = displayMovies
             applySnapshot(movies: displayMovies, animatingDifferences: true)
         case .failure(let error):
-            presentAlert(title: "네트워크 오류", message: "네트워크에 문제가 있습니다 \(error)", confirmTitle: "확인")
+            presentAlert(error: error)
         }
+    }
+    
+    @MainActor
+    func presentAlert(error: DomainError) {
+        self.presentAlert(title: "네트워크 오류", message: "네트워크에 문제가 있습니다 \(error)", confirmTitle: "확인")
     }
     
     func mapEntityToDisplayModel(_ boxOfficeMovies: [BoxOfficeMovie]) -> [BoxOfficeDisplayModel] {
@@ -153,5 +137,20 @@ private extension BoxOfficeViewController {
         snapshot.appendSections([.main])
         snapshot.appendItems(movies, toSection: .main)
         dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
+    }
+}
+
+extension BoxOfficeViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        // 여기서 선택된 영화의 상세 정보를 가져오기
+        let movie = movies[indexPath.row]
+        
+        // DetailMovieViewController 초기화 및 데이터 전달
+        let detailViewController = DetailMovieViewController()
+        // 여기에 필요한 데이터 전달 로직 추가,
+        // detailViewController.movie = movie
+        
+        // 화면 전환 실행
+        navigationController?.pushViewController(detailViewController, animated: true)
     }
 }
