@@ -41,7 +41,7 @@ struct Meta: Decodable {
 }
 
 // MARK: - Mapping
-extension Document: Mappable {
+extension Document: kakaoMappapleTemp {
     func toEntity() -> KakaoSearchImage {
         return KakaoSearchImage(imageURL: imageURL)
     }

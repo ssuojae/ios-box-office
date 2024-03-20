@@ -39,6 +39,7 @@ extension BoxOfficeViewController {
         setupUI()
         configureDataSource()
         fetchBoxOfficeData()
+        fetchBoxOfficeDetailData()
         boxOfficeCollectionView.delegate = self
 
     }
@@ -85,20 +86,27 @@ private extension BoxOfficeViewController {
     func fetchBoxOfficeData() {
         fetchTask = Task {
             let result = await boxOfficeUseCase.fetchBoxOfficeData()
-            handleFetchResult(result)
+            handleBoxOfficeResult(result)
         }
         self.boxOfficeCollectionView.refreshControl?.endRefreshing()
     }
     
-    func handleFetchResult(_ result: Result<[BoxOfficeMovie], DomainError>) {
-        switch result {
-        case .success(let boxOfficeMovies):
-            let displayMovies = mapEntityToDisplayModel(boxOfficeMovies)
-            self.movies = displayMovies
-            applySnapshot(movies: displayMovies, animatingDifferences: true)
-        case .failure(let error):
-            presentAlert(error: error)
+    func handleBoxOfficeResult(_ result: [BoxOfficeMovie]?) {
+        guard let boxOfficeMovies = result else { return }
+        let displayMovies = mapEntityToDisplayModel(boxOfficeMovies)
+        self.movies = displayMovies
+        applySnapshot(movies: displayMovies, animatingDifferences: true)
+    }
+    
+    func fetchBoxOfficeDetailData() {
+        fetchTask = Task {
+            let result = await boxOfficeUseCase.fetchDetailMovieData(movie: "20236488")
+            handleBoxOfficeDetailResult(result)
         }
+    }
+    
+    func handleBoxOfficeDetailResult(_ result: MovieDetailInfo) {
+            print(result)
     }
     
     @MainActor
@@ -117,6 +125,7 @@ private extension BoxOfficeViewController {
                 audienceAccount: $0.cumulateAudience)}
     }
 }
+
 
 // MARK: - Apply Diffable DataSource
 private extension BoxOfficeViewController {

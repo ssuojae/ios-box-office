@@ -16,17 +16,17 @@ final class DependencyEnvironment {
         self.sessionFactory = sessionFactory
     }
 
-    private lazy var jsonDecodeProvider: DecoderProtocol = JsonDecoder(jsonDecoder: decoderFactory.makeJsonDecoder())
+    //private lazy var jsonDecodeProvider: DecoderProtocol = JsonDecoder(jsonDecoder: decoderFactory.makeJsonDecoder())
     
-    private lazy var sessionProvider: SessionProvidable = sessionFactory.makeSession()
-    
-    private lazy var requestBuidler: RequestBuilderProtocol = RequestBuilder()
-    
-    private lazy var networkManager: NetworkManagerProtocol = NetworkManager(sessionProvider: sessionProvider, decoder: jsonDecodeProvider)
+    private lazy var decodeProvider: DecoderProtocol = JsonDecoder(jsonDecoder: decoderFactory.makeJsonDecoder())
 
-    private lazy var movieRepository: MovieRepositoryProtocol = MovieRepository(networkManager: networkManager, requestBuilder: requestBuidler)
+    private var sessionProvider: SessionProvidable = SessionProvider()
+
+    private lazy var movieRepository: MovieRepositoryProtocol = MovieRepository(sessionProvider: sessionProvider, decoder: decodeProvider)
     
-    private lazy var boxOfficeUseCase: BoxOfficeUseCaseProtocol = BoxOfficeUseCase(moviesRepository: movieRepository)
+    private lazy var mapper: Mappaple = Mapper(movieRepository: movieRepository)
+    
+    private lazy var boxOfficeUseCase: BoxOfficeUseCaseProtocol = BoxOfficeUseCase(mapper: mapper)
 }
 
 extension DependencyEnvironment: ViewControllerFactoryProtocol {
