@@ -2,25 +2,22 @@
 import Foundation
 
 final class BoxOfficeUseCase: BoxOfficeUseCaseProtocol {
-    private let moviesRepository: MovieRepositoryProtocol
+    private let mapper: Mappaple
     
-    init(moviesRepository: MovieRepositoryProtocol) {
-        self.moviesRepository = moviesRepository
+    init(mapper: Mappaple) {
+        self.mapper = mapper
     }
     
-    func fetchBoxOfficeData() async -> Result<[BoxOfficeMovie], DomainError> {
-        let result = await moviesRepository.requestBoxofficeData()
-        return result
-    }
-
-    func fetchDetailMovieData(movie: String) async -> Result<MovieDetailInfo, DomainError> {
-        let result = await moviesRepository.requestDetailMovieData(movie: movie)
-        return result
+    func fetchBoxOfficeData() async -> [BoxOfficeMovie] {
+        return await mapper.mapBoxOfficeMovieData()
     }
     
-    
-    func fetchKakaoImageSearchData(query: String) async -> Result<[KakaoSearchImage], DomainError> {
-        let result = await moviesRepository.requestKaKaoImageSearch(query: query)
-        return result
+    func fetchDetailMovieData(movie: String) async -> MovieDetailInfo {
+        return await mapper.mapBoxOfficeDetailData(movie: movie)
     }
+    
+//    func fetchKakaoImageSearchData(query: String) async -> Result<[KakaoSearchImage], DomainError> {
+//        let result = await moviesRepository.requestKaKaoImageSearch(query: query)
+//        return result
+//    }
 }
