@@ -10,7 +10,6 @@ final class MovieRepository: MovieRepositoryProtocol {
         self.decoder = decoder
     }
     
-    
     func requestBoxOfficeData<T: Decodable>() async -> T? {
         guard let request = RequestProvider(requestInformation: .dailyMovie).request else {
             return nil
@@ -20,6 +19,13 @@ final class MovieRepository: MovieRepositoryProtocol {
     
     func requestDetailMovieData<T: Decodable>(movieCode: String) async -> T? {
         guard let request = RequestProvider(requestInformation: .detailMovie(code: movieCode)).request else {
+            return nil
+        }
+        return await requestAPI(request: request)
+    }
+    
+    func requestKakaoImageSearchData<T: Decodable>(query: String) async -> T? {
+        guard let request = RequestProvider(requestInformation: .kakaoImageSearch(query: query)).request else {
             return nil
         }
         return await requestAPI(request: request)

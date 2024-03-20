@@ -4,6 +4,7 @@ import Foundation
 final class Mapper: Mappaple {
     private var boxOfficeData: BoxOfficeDTO?
     private var detailBoxOfficeData: DetailMovieInfoDTO?
+    private var kakaoImagerSearchData: KakaoImageSearchDTO?
     private let movieRepository: MovieRepositoryProtocol
     
     init(movieRepository: MovieRepositoryProtocol) {
@@ -32,5 +33,11 @@ final class Mapper: Mappaple {
         return MovieDetailInfo(movieName: data.movieInfoResult.movieInfo.movieName, openDate: data.movieInfoResult.movieInfo.openDate)
     }
     
-    //카카오 API 만들기 
+    func mapKakaoImageSearchData(query: String) async -> [KakaoSearchImage] {
+        kakaoImagerSearchData = await movieRepository.requestKakaoImageSearchData(query: query)
+        guard let data = kakaoImagerSearchData else { fatalError() }
+        return data.documents.map {
+            KakaoSearchImage(imageURL: $0.imageURL)
+        }
+    }
 }

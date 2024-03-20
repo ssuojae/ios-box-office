@@ -40,6 +40,7 @@ extension BoxOfficeViewController {
         configureDataSource()
         fetchBoxOfficeData()
         fetchBoxOfficeDetailData()
+        fetchKakaoImageSearchData()
         boxOfficeCollectionView.delegate = self
 
     }
@@ -56,8 +57,7 @@ private extension BoxOfficeViewController {
     func configureNavigationBar() {
         navigationItem.title = Date().formattedDate(withFormat: "YYYY-MM-dd")
     }
-    
-    // 셀 등록 설정 메서드
+
     func configureCellRegistration() {
         cellRegistration = UICollectionView.CellRegistration<BoxOfficeCell, BoxOfficeDisplayModel> { (cell, indexPath, movie) in
             cell.accessories = [.disclosureIndicator()]
@@ -68,8 +68,7 @@ private extension BoxOfficeViewController {
             cell.matchAudienceAccount(of: movie)
         }
     }
-    
-    // Refresh
+
     func setupRefreshControl() {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshBoxOfficeData), for: .valueChanged)
@@ -107,6 +106,18 @@ private extension BoxOfficeViewController {
     
     func handleBoxOfficeDetailResult(_ result: MovieDetailInfo) {
             print(result)
+    }
+    
+    func fetchKakaoImageSearchData() {
+        fetchTask = Task {
+            let result = await boxOfficeUseCase.fetchKakaoImageSearchData(query: "파묘 영화 포스터")
+            handleBoxOfficeDetailResult(result)
+        }
+    }
+    
+    func handleBoxOfficeDetailResult(_ result: [KakaoSearchImage]) {
+            print("카카오 이미지 주소")
+            print(result[0])
     }
     
     @MainActor

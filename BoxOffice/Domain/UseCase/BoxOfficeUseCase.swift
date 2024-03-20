@@ -16,8 +16,8 @@ final class BoxOfficeUseCase: BoxOfficeUseCaseProtocol {
         return await mapper.mapBoxOfficeDetailData(movie: movie)
     }
     
-//    func fetchKakaoImageSearchData(query: String) async -> Result<[KakaoSearchImage], DomainError> {
-//        let result = await moviesRepository.requestKaKaoImageSearch(query: query)
-//        return result
-//    }
+    func fetchKakaoImageSearchData(query: String) async -> [KakaoSearchImage] {
+        return await mapper.mapKakaoImageSearchData(query: query)
+    }
 }
+
