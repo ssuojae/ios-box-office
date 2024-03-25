@@ -4,9 +4,8 @@
 
 # 박스오피스 리드미 
 
-
 ## 팀원 소개
-| <img src="https://github.com/hemil0102/ios-contact-manager-ui/assets/149054154/a88ee4a3-2981-4b60-bb6d-47138f6a0dc9" width="200"> | <img src="https://github.com/suojae3/ios-box-office/assets/126137760/ab91d3bb-6bcb-480c-a2b0-74b8e8e35bd5" width="200"> |
+| <img src="https://github.com/suojae3/ios-box-office/assets/126137760/f4596cb5-38d6-459d-b573-107b35f96ae3" width="200"> | <img src="https://github.com/suojae3/ios-box-office/assets/126137760/ab91d3bb-6bcb-480c-a2b0-74b8e8e35bd5" width="200"> |
 |:----------:|:---------:|
 | **Sajae** | **Harry** |
 | [@suojae3](https://github.com/suojae3) |  [@hemil0102](https://github.com/hemil0102)|
