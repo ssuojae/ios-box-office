@@ -2,7 +2,6 @@
 import UIKit
 
 class MovieDetailView: UIView {
-    
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private let movieImageView = UIImageView()
@@ -40,7 +39,6 @@ class MovieDetailView: UIView {
     }
     
     private func createRowStackView(title: String, detail: String) -> UIStackView {
-        
         let rowStackView = UIStackView(axis: .horizontal,
                                        spacing: 8,
                                        alignment: .firstBaseline,

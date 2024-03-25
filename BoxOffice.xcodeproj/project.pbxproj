@@ -36,7 +36,6 @@
 		08EDB0D62BA9785900FC3700 /* UIExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EDB0D52BA9785900FC3700 /* UIExtension.swift */; };
 		08EDB0D82BA9787A00FC3700 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EDB0D72BA9787A00FC3700 /* Movie.swift */; };
 		08EDB0DA2BA978A500FC3700 /* DetailMovieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EDB0D92BA978A500FC3700 /* DetailMovieView.swift */; };
-		08EDB0DF2BA97E4E00FC3700 /* BoxOfficeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08EDB0DE2BA97E4E00FC3700 /* BoxOfficeView.swift */; };
 		63DF20EF2970E1A0005DF7D1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF20EE2970E1A0005DF7D1 /* AppDelegate.swift */; };
 		63DF20F12970E1A0005DF7D1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF20F02970E1A0005DF7D1 /* SceneDelegate.swift */; };
 		63DF20F32970E1A0005DF7D1 /* BoxOfficeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF20F22970E1A0005DF7D1 /* BoxOfficeViewController.swift */; };
@@ -63,6 +62,7 @@
 		C7A3FF692BAAD12100FEE6A6 /* MappableProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A3FF682BAAD12100FEE6A6 /* MappableProtocol.swift */; };
 		C7A3FF6B2BAAD2B500FEE6A6 /* URLInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A3FF6A2BAAD2B500FEE6A6 /* URLInformation.swift */; };
 		C7A3FF6D2BAAD3D700FEE6A6 /* RequestProvidable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A3FF6C2BAAD3D700FEE6A6 /* RequestProvidable.swift */; };
+		C7A3FF6F2BAAE95200FEE6A6 /* BoxOfficeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A3FF6E2BAAE95200FEE6A6 /* BoxOfficeView.swift */; };
 		C7C8D3332B7C5EA9009DE42F /* BoxOfficeDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C8D3322B7C5EA9009DE42F /* BoxOfficeDTO.swift */; };
 /* End PBXBuildFile section */
 
@@ -107,7 +107,6 @@
 		08EDB0D52BA9785900FC3700 /* UIExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIExtension.swift; sourceTree = "<group>"; };
 		08EDB0D72BA9787A00FC3700 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		08EDB0D92BA978A500FC3700 /* DetailMovieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailMovieView.swift; sourceTree = "<group>"; };
-		08EDB0DE2BA97E4E00FC3700 /* BoxOfficeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxOfficeView.swift; sourceTree = "<group>"; };
 		63DF20EB2970E1A0005DF7D1 /* BoxOffice.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BoxOffice.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63DF20EE2970E1A0005DF7D1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		63DF20F02970E1A0005DF7D1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -136,6 +135,7 @@
 		C7A3FF682BAAD12100FEE6A6 /* MappableProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MappableProtocol.swift; sourceTree = "<group>"; };
 		C7A3FF6A2BAAD2B500FEE6A6 /* URLInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLInformation.swift; sourceTree = "<group>"; };
 		C7A3FF6C2BAAD3D700FEE6A6 /* RequestProvidable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestProvidable.swift; sourceTree = "<group>"; };
+		C7A3FF6E2BAAE95200FEE6A6 /* BoxOfficeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxOfficeView.swift; sourceTree = "<group>"; };
 		C7C8D3322B7C5EA9009DE42F /* BoxOfficeDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxOfficeDTO.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -192,7 +192,7 @@
 				C76771832B9AA88400B3B9BD /* BoxOfficeCollectionView.swift */,
 				08EDB0CB2BA925BF00FC3700 /* StackViewFactory.swift */,
 				08EDB0D92BA978A500FC3700 /* DetailMovieView.swift */,
-				08EDB0DE2BA97E4E00FC3700 /* BoxOfficeView.swift */,
+				C7A3FF6E2BAAE95200FEE6A6 /* BoxOfficeView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -607,9 +607,9 @@
 				63DF20EF2970E1A0005DF7D1 /* AppDelegate.swift in Sources */,
 				C7A1E7682B882C3A00F9AB6B /* MovieRepositoryProtocol.swift in Sources */,
 				C7A3FF6B2BAAD2B500FEE6A6 /* URLInformation.swift in Sources */,
+				C7A3FF6F2BAAE95200FEE6A6 /* BoxOfficeView.swift in Sources */,
 				082798362B882B8400ACC723 /* JsonDecodableProtocol.swift in Sources */,
 				08EDB0D62BA9785900FC3700 /* UIExtension.swift in Sources */,
-				08EDB0DF2BA97E4E00FC3700 /* BoxOfficeView.swift in Sources */,
 				08EB6A0A2BA43119006071F9 /* DetailMovieViewController.swift in Sources */,
 				08EB6A0C2BA43172006071F9 /* KakaoImageSearchDTO.swift in Sources */,
 				0864FC632B9F2EE500CE0725 /* APIHostType.swift in Sources */,

@@ -90,7 +90,6 @@ extension BoxOfficeCell {
     }
     
     private func configureHorizontalStackView() {
-        
         NSLayoutConstraint.activate([
             horizontalStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
             horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),

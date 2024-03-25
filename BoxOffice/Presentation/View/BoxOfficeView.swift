@@ -3,16 +3,16 @@
 //class BoxOfficeView: UIView {
 //    lazy var collectionView: UICollectionView = makeCollectionView()
 //    var dataSource: UICollectionViewDiffableDataSource<Section, BoxOfficeDisplayModel>!
-//    
+//
 //    override init(frame: CGRect) {
 //        super.init(frame: frame)
 //        setupCollectionView()
 //        configureDataSource()
 //        registerCells()
 //    }
-//    
+//
 //    required init?(coder: NSCoder) { fatalError() }
-//    
+//
 //    private func makeCollectionView() -> UICollectionView {
 //        let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
 //            var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
@@ -24,7 +24,7 @@
 //        }
 //        return UICollectionView(frame: .zero, collectionViewLayout: layout)
 //    }
-//    
+//
 //    private func setupCollectionView() {
 //        addSubview(collectionView)
 //        collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -36,11 +36,11 @@
 //        ])
 //        collectionView.backgroundColor = .systemBackground
 //    }
-//    
+//
 //    private func configureDataSource() {
 //        dataSource = UICollectionViewDiffableDataSource<Section, BoxOfficeDisplayModel>(collectionView: collectionView) { (collectionView, indexPath, model) -> UICollectionViewCell? in
 //            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BoxOfficeCell", for: indexPath) as? BoxOfficeCell
-//            cell?.configure(with: model) 
+//            cell?.configure(with: model)
 //            return cell
 //        }
 //    }
@@ -48,14 +48,14 @@
 //    private func registerCells() {
 //        collectionView.register(BoxOfficeCell.self, forCellWithReuseIdentifier: "BoxOfficeCell")
 //    }
-//    
+//
 //    func update(with models: [BoxOfficeDisplayModel], animating: Bool = true) {
 //        var snapshot = NSDiffableDataSourceSnapshot<Section, BoxOfficeDisplayModel>()
 //        snapshot.appendSections([.main])
 //        snapshot.appendItems(models, toSection: .main)
 //        dataSource.apply(snapshot, animatingDifferences: animating)
 //    }
-//    
+//
 //    private func contextualSwipeActions(forItemAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 //        nil
 //    }
